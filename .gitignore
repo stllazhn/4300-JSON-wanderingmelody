@@ -18,3 +18,8 @@ build/
 *.egg-info/
 helpers/*
 json_template/
+
+# Environment variables
+.env
+.env.local
+.env.*
