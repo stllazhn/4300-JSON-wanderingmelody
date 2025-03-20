@@ -32,6 +32,7 @@ def before_first_request():
 def index():
     # Ensure Streamlit is available before loading the page
     return render_template('streamlit_embed.html')
+#
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False)  # `use_reloader=False` to avoid restarting Flask server when Streamlit starts
