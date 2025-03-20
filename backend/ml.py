@@ -1,33 +1,51 @@
-# ml.py
 import json
 import os
 import re
 import pandas as pd
-from typing import List, Tuple, Dict
-from collections.abc import Callable
-import numpy as np
+from typing import List, Callable
 from collections import Counter
 import nltk
-# from nltk.corpus import stopwords, wordnet
-from nltk.corpus import stopwords
-from nltk.corpus import wordnet
-from nltk.stem import PorterStemmer
-from nltk.sentiment import SentimentIntensityAnalyzer
-from itertools import chain
 import math
+import ssl
+from nltk.corpus import wordnet
+from nltk.sentiment import SentimentIntensityAnalyzer
 
-# Ensure NLTK resources are downloaded
-# nltk.download('punkt_tab')
 nltk.download('punkt')
-nltk.download('stopwords')
 nltk.download('vader_lexicon')
 
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
+
+# Define a stopwords list manually
+custom_stopwords = set([
+    'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your',
+    'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her',
+    'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their', 'theirs',
+    'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those',
+    'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had',
+    'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if',
+    'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about',
+    'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above',
+    'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under',
+    'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why',
+    'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some',
+    'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very',
+    's', 't', 'can', 'will', 'just', 'don', 'should', 'now'
+])
 
 # Load datasets
 spotify_df = pd.read_csv("hf://datasets/maharshipandya/spotify-tracks-dataset/dataset.csv")
 lyric_df = pd.read_csv("spotify_millsongdata.csv")
 
+print("Spotify Dataset Sample:")
+print(spotify_df.head())
 
+print("Lyrics Dataset Sample:")
+print(lyric_df.head())
 
 # Tokenization function
 def tokenize(text: str) -> List[str]:
@@ -43,32 +61,18 @@ def tokenize_lyrics(dict_of_lyrics, tokenize_method: Callable[[str], List[str]])
         tokenized_lyrics[i] = tokenize_method(lyrics)
     return tokenized_lyrics
 
-# Build word-song count
-def build_word_song_count(tokenize_method: Callable[[str], List[str]], tokenized_lyrics: Dict[int, List[str]]):
-    song_count = {}
-    for key in tokenized_lyrics:
-        unique_tokens = set(token.casefold() for token in tokenized_lyrics[key])
-        for token in unique_tokens:
-            if token not in song_count:
-                song_count[token] = set()
-            song_count[token].add(key)
-    return song_count
-
 # Remove stop words
-def remove_stop_words(list_of_stop_words, tokenized_lyrics):
-    clean_stop_words = set()
-    for word in list_of_stop_words:
-        clean_stop_words.update(nltk.word_tokenize(word.lower()))
+def remove_stop_words(stop_words, tokenized_lyrics):
     stop_word_removed_lyrics = {}
     for i, lyrics in tokenized_lyrics.items():
-        cleaned_lyrics = [word for word in lyrics if word.lower() not in clean_stop_words]
+        cleaned_lyrics = [word for word in lyrics if word.lower() not in stop_words]
         stop_word_removed_lyrics[i] = cleaned_lyrics
     return stop_word_removed_lyrics
 
 # Remove stop words from input
-def remove_stop_words_input(tokenize, list_of_stop_words, input_words):
+def remove_stop_words_input(tokenize, stop_words, input_words):
     list_tokens = tokenize(input_words)
-    cleaned_words = [word for word in list_tokens if word not in list_of_stop_words]
+    cleaned_words = [word for word in list_tokens if word not in stop_words]
     return cleaned_words
 
 # Build inverted index
@@ -90,8 +94,7 @@ def compute_idf(inv_idx, n_docs, min_df=0, max_df_ratio=1):
     for word, word_list in inv_idx.items():
         word_count = len(word_list)
         if word_count >= min_df and word_count / n_docs <= max_df_ratio:
-            idf = math.log2(n_docs/(1+word_count))
-            return_dict[word] = idf
+            return_dict[word] = [song_id for song_id, _ in word_list]  # ✅ Store song IDs instead of float IDF
     return return_dict
 
 # Get synonyms of a word
@@ -121,38 +124,62 @@ def sort_polarity_scores(input_song_list, cleaned_tokenized_lyrics, polarity_typ
     sorted_songs = sorted(dict_of_polarity_scores, key=lambda x: dict_of_polarity_scores[x][polarity_type], reverse=True)
     return sorted_songs
 
+print("before the recommended song function")
+
 # Main function to process user input and recommend songs
 def recommend_songs(user_genre_input, cleaned_tokenized_lyrics, clean_song_count):
-    clean_genre_input = remove_stop_words(stopwords.words('english'), {0: tokenize(user_genre_input)})
+    print("after the recommended song function")
+    clean_genre_input = remove_stop_words(custom_stopwords, {0: tokenize(user_genre_input)})
     possible_songs_dict = {}
     for word in clean_genre_input[0]:
         if clean_song_count.get(word) is not None:
             possible_songs_dict[word] = clean_song_count[word]
     
-    stemmed_user_input = []
-    stemmed_user_input_preserve_original = []
-    for word in clean_genre_input[0]:
-        if possible_songs_dict.get(word) is None:
-            stemmed_user_input_word = ps.stem(word)
-            stemmed_user_input.append(stemmed_user_input_word)
-            stemmed_user_input_preserve_original.append(stemmed_user_input_word)
-        else:
-            stemmed_user_input_preserve_original.append(word)
+    stemmed_user_input_preserve_original = [word for word in clean_genre_input[0] if possible_songs_dict.get(word) is None]
     
-    for word in stemmed_user_input:
+    for word in stemmed_user_input_preserve_original:
         if clean_song_count.get(word) is not None:
             possible_songs_dict[word] = clean_song_count[word]
     
     most_common_songs = []
     if possible_songs_dict:
-        song_counts = Counter(song for song_list in possible_songs_dict.values() for song in song_list)
+        # song_counts = Counter(song for song_list in possible_songs_dict.values() for song in song_list)
+        song_counts = Counter()
+        for song_list in possible_songs_dict.values():
+            if isinstance(song_list, list):  # Ensure it's a list
+                song_counts.update(song_list)
+            else:
+                print(f"Warning: Unexpected value in possible_songs_dict - {song_list}")
+
         max_number = max(song_counts.values(), default=0)
         most_common_songs = [song for song, count in song_counts.items() if count == max_number]
     
-    word_synonym_dict = {}
-    for word in stemmed_user_input_preserve_original:
-        if possible_songs_dict.get(word) is None:
-            set_of_synonyms = get_synonyms_of_word(word)
-            word_synonym_dict[word] = list(set_of_synonyms)
+    word_synonym_dict = {word: list(get_synonyms_of_word(word)) for word in stemmed_user_input_preserve_original if possible_songs_dict.get(word) is None}
+
+    print(f"Cleaned Input: {clean_genre_input}")
+    print(f"Possible Songs: {possible_songs_dict}")
+    print(f"Most Common Songs: {most_common_songs}")
     
     return most_common_songs, word_synonym_dict
+
+def get_song_details(song_ids):
+    """Return song details (title, artist, album) from the Spotify dataset given a list of song IDs."""
+    song_details = []
+    for song_id in song_ids:
+        song_row = spotify_df.loc[spotify_df.index == song_id]  # Find the row with the given song_id
+        if not song_row.empty:
+            details = {
+                "title": song_row["track_name"].values[0],
+                "artist": song_row["artists"].values[0],
+                "album": song_row["album_name"].values[0],
+                "genre": song_row["track_genre"].values[0]
+            }
+            song_details.append(details)
+    return song_details
+
+# if __name__ == "__main__":
+#     print("Calling recommend_songs manually for debugging...")
+#     test_genre = "sad"
+#     recommended_songs, synonyms = recommend_songs(test_genre, {}, {})
+#     print(f"Recommended Songs: {recommended_songs}")
+#     print(f"Synonyms Used: {synonyms}")

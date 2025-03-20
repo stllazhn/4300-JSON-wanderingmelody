@@ -1,23 +1,37 @@
-import streamlit as st
+import subprocess
+import threading
+import time
+from flask import Flask, render_template
 import requests
-import ml
 
-st.title("🎶 WanderingMelody")
-st.write("Describe your mood or trip experience and get music recommendations!")
+app = Flask(__name__)
 
-# Input fields
-mood = st.text_area("Describe your mood or trip experience")
-location_query = st.text_input("Search Location (Optional)")
-age = st.number_input("Enter Age (Optional)", min_value=1, max_value=100, step=1, value=18)
-genre = st.text_input("Enter Music Genre")
+# Function to check if Streamlit is running
+def check_streamlit():
+    try:
+        response = requests.get("http://localhost:8501")
+        return response.status_code == 200
+    except requests.ConnectionError:
+        return False
 
-if st.button("Search"):
-    if not mood and not genre:
-        st.error("Please provide at least a mood description or a genre.")
-    else:
-        # Call ML function
-        recommended_songs, synonyms = ml.recommend_songs(genre, {}, {})  # Using empty dicts for now
-        if recommended_songs:
-            st.success(f"🎵 Recommended Songs: {', '.join(map(str, recommended_songs))}")
-        else:
-            st.warning("No songs found, try another genre or mood.")
+# Function to run Streamlit in a separate thread
+def run_streamlit():
+    subprocess.run(["streamlit", "run", "streamlit_app.py"])
+
+# Start Streamlit in the background and ensure it starts before rendering Flask page
+@app.before_first_request
+def before_first_request():
+    # Start Streamlit in a separate thread
+    threading.Thread(target=run_streamlit).start()
+
+    # Wait for Streamlit to be available
+    while not check_streamlit():
+        time.sleep(1)  # Check every second
+
+@app.route('/')
+def index():
+    # Ensure Streamlit is available before loading the page
+    return render_template('streamlit_embed.html')
+
+if __name__ == '__main__':
+    app.run(debug=True, use_reloader=False)  # `use_reloader=False` to avoid restarting Flask server when Streamlit starts
