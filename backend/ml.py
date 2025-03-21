@@ -38,7 +38,7 @@ custom_stopwords = set([
 ])
 
 # Load datasets
-spotify_df = pd.read_csv("hf://datasets/maharshipandya/spotify-tracks-dataset/dataset.csv")
+spotify_df = pd.read_csv("spotify-tracks-dataset.csv")
 lyric_df = pd.read_csv("spotify_millsongdata.csv")
 
 print("Spotify Dataset Sample:")
