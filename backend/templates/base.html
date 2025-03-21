@@ -3,30 +3,39 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
 
 <body>
     <div class="full-body-container">
         <div class="top-text">
-            <h1>🎶 WanderingMelody</h1>
+            <h1 id="wandering-melody">🎶 WanderingMelody</h1>
             <p>Describe your mood or trip experience and get music recommendations!</p>
 
             <!-- Mood input -->
-            <textarea placeholder="Describe your mood or trip experience" id="mood"></textarea>
+            <div class="input-box">
+                <textarea placeholder="Describe your mood or trip experience" id="mood"></textarea>
+            </div>
             
             <!-- Location input -->
-            <input type="text" placeholder="Search Location (Optional)" id="location">
+            <div class="input-box">
+                <input type="text" placeholder="Search Location (Optional)" id="location">
+            </div>
 
             <!-- Age input -->
-            <input type="number" placeholder="Enter Age (Optional)" id="age" min="1" max="100" value="18">
+            <div class="input-box">
+                <input type="number" placeholder="Enter Age (Optional)" id="age" min="1" max="100" value="18">
+            </div>
 
             <!-- Genre input -->
-            <input type="text" placeholder="Enter Music Genre" id="genre">
+            <div class="input-box">
+                <input type="text" placeholder="Enter Music Genre" id="genre">
+            </div>
 
             <button onclick="searchRecommendations()">Search</button>
         </div>
         
         <div id="answer-box"></div>
+        <div id="loading-message" style="display:none;">Loading recommendations...</div>
     </div>
 
     <script>
@@ -36,9 +45,18 @@
             const age = document.getElementById("age").value;
             const genre = document.getElementById("genre").value;
 
+            // Clear previous results immediately
+            const answerBox = document.getElementById("answer-box");
+            answerBox.innerHTML = "";  
+            
+            // Show loading message
+            const loadingMessage = document.getElementById("loading-message");
+            loadingMessage.style.display = "block";
+
             // If no mood or genre is provided, alert the user
             if (!mood && !genre) {
                 alert("Please provide at least a mood description or a genre.");
+                loadingMessage.style.display = "none";  // Hide loading message
                 return;
             }
 
@@ -51,18 +69,19 @@
             }).toString())
             .then(response => response.json())
             .then(data => {
-                const answerBox = document.getElementById("answer-box");
-                answerBox.innerHTML = "";  // Clear previous results
-
+                loadingMessage.style.display = "none";  // Hide loading message
                 if (data && data.length > 0) {
                     // Display the recommended songs
                     data.forEach(song => {
                         let songDiv = document.createElement("div");
+                        songDiv.classList.add("song-box");
                         songDiv.innerHTML = `
-                            <h3>${song.title}</h3>
-                            <p>by ${song.artist}</p>
-                            <p>Album: ${song.album} | Genre: ${song.genre}</p>
-                            <p>Rating: ${song.rating}</p>
+                            <div class="song-details">
+                                <h3 class="song-title">${song.title}</h3>
+                                <p class="song-artist">by ${song.artist}</p>
+                                <p class="song-album">Album: ${song.album} | Genre: ${song.genre}</p>
+                                <p class="song-rating">Rating: ${song.rating || 'Not available'}</p>
+                            </div>
                         `;
                         answerBox.appendChild(songDiv);
                     });
@@ -70,6 +89,10 @@
                     // If no songs are found, display a message
                     answerBox.innerHTML = "<p>No songs found, try another genre or mood.</p>";
                 }
+            })
+            .catch(error => {
+                loadingMessage.style.display = "none";  // Hide loading message on error
+                alert("Error fetching recommendations. Please try again.");
             });
         }
     </script>

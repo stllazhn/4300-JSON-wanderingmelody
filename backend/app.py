@@ -2,16 +2,11 @@ import json
 import os
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
-import ml  # Assuming your ML functions are inside ml.py
+import ml  
 
 # ROOT_PATH for linking with all your files.
 os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..", os.curdir))
 
-# # Load the necessary data (e.g., lyrics dataset)
-# with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'init.json'), 'r') as file:
-#     data = json.load(file)
-#     episodes_df = pd.DataFrame(data['episodes'])
-#     reviews_df = pd.DataFrame(data['reviews'])
 
 app = Flask(__name__)
 CORS(app)
@@ -42,7 +37,7 @@ def recommendations():
     recommended_songs, synonyms = ml.recommend_songs(genre, cleaned_tokenized_lyrics, clean_song_count)
 
     if not recommended_songs:
-        return jsonify([])  # No recommendations found
+        return jsonify([])  
     
     # Get song details (e.g., title, artist, album, genre, rating)
     song_details = ml.get_song_details(recommended_songs)
