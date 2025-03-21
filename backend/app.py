@@ -11,11 +11,11 @@ os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..", os.curdir))
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/")
+@app.route("/", methods=['GET'])
 def home():
     return render_template('base.html', title="WanderingMelody")
 
-@app.route("/recommendations")
+@app.route("/recommendations", methods=['GET'])
 def recommendations():
     mood = request.args.get("mood")
     location = request.args.get("location")
