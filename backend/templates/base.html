@@ -3,7 +3,9 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+<link
+    href="https://fonts.googleapis.com/css2?family=Pacifico&family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
+    rel="stylesheet">
 
 <body>
     <div class="full-body-container">
@@ -15,7 +17,7 @@
             <div class="input-box">
                 <textarea placeholder="Describe your mood or trip experience" id="mood"></textarea>
             </div>
-            
+
             <!-- Location input -->
             <div class="input-box">
                 <input type="text" placeholder="Search Location (Optional)" id="location">
@@ -33,7 +35,7 @@
 
             <button onclick="searchRecommendations()">Search</button>
         </div>
-        
+
         <div id="answer-box"></div>
         <div id="loading-message" style="display:none;">Loading recommendations...</div>
     </div>
@@ -45,10 +47,12 @@
             const age = document.getElementById("age").value;
             const genre = document.getElementById("genre").value;
 
+            console.log("Search initiated with parameters:", { mood, location, age, genre });
+
             // Clear previous results immediately
             const answerBox = document.getElementById("answer-box");
-            answerBox.innerHTML = "";  
-            
+            answerBox.innerHTML = "";
+
             // Show loading message
             const loadingMessage = document.getElementById("loading-message");
             loadingMessage.style.display = "block";
@@ -57,43 +61,59 @@
             if (!mood && !genre) {
                 alert("Please provide at least a mood description or a genre.");
                 loadingMessage.style.display = "none";  // Hide loading message
+                console.log("Input validation failed: Both mood and genre are missing.");
                 return;
             }
 
-            // Send the input data to the backend via a GET request
-            fetch("/recommendations?" + new URLSearchParams({
+            // Prepare request URL
+            const requestUrl = "/recommendations?" + new URLSearchParams({
                 mood: mood,
                 location: location,
                 age: age,
                 genre: genre
-            }).toString())
-            .then(response => response.json())
-            .then(data => {
-                loadingMessage.style.display = "none";  // Hide loading message
-                if (data && data.length > 0) {
-                    // Display the recommended songs
-                    data.forEach(song => {
-                        let songDiv = document.createElement("div");
-                        songDiv.classList.add("song-box");
-                        songDiv.innerHTML = `
-                            <div class="song-details">
-                                <h3 class="song-title">${song.title}</h3>
-                                <p class="song-artist">by ${song.artist}</p>
-                                <p class="song-album">Album: ${song.album} | Genre: ${song.genre}</p>
-                                <p class="song-rating">Rating: ${song.rating || 'Not available'}</p>
-                            </div>
-                        `;
-                        answerBox.appendChild(songDiv);
-                    });
-                } else {
-                    // If no songs are found, display a message
-                    answerBox.innerHTML = "<p>No songs found, try another genre or mood.</p>";
-                }
-            })
-            .catch(error => {
-                loadingMessage.style.display = "none";  // Hide loading message on error
-                alert("Error fetching recommendations. Please try again.");
-            });
+            }).toString();
+
+            console.log("Fetching recommendations from:", requestUrl);
+
+            // Send the input data to the backend via a GET request
+            fetch(requestUrl)
+                .then(response => {
+                    console.log("Response received:", response);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Parsed response data:", data);
+                    loadingMessage.style.display = "none";  // Hide loading message
+
+                    if (data && data.length > 0) {
+                        // Display the recommended songs
+                        data.forEach(song => {
+                            let songDiv = document.createElement("div");
+                            songDiv.classList.add("song-box");
+                            songDiv.innerHTML = `
+                                <div class="song-details">
+                                    <h3 class="song-title">${song.title}</h3>
+                                    <p class="song-artist">by ${song.artist}</p>
+                                    <p class="song-album">Album: ${song.album} | Genre: ${song.genre}</p>
+                                    <p class="song-rating">Rating: ${song.rating || 'Not available'}</p>
+                                </div>
+                            `;
+                            answerBox.appendChild(songDiv);
+                        });
+                    } else {
+                        // If no songs are found, display a message
+                        console.log("No songs found.");
+                        answerBox.innerHTML = "<p>No songs found, try another genre or mood.</p>";
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                    loadingMessage.style.display = "none";  // Hide loading message on error
+                    alert("Error fetching recommendations. Please try again.");
+                });
         }
     </script>
 </body>
