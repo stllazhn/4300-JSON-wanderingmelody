@@ -26,4 +26,5 @@ tzdata==2024.1
 Werkzeug==2.2.2
 nltk==3.8.1
 flask-cors==3.0.10
+fsspec
 
