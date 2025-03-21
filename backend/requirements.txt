@@ -25,6 +25,5 @@ typing_extensions==4.5.0
 tzdata==2024.1
 Werkzeug==2.2.2
 nltk==3.8.1
-flask-cors
-streamlit
-Flask
+flask-cors==3.0.10
+
