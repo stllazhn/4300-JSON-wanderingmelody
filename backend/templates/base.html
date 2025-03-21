@@ -42,6 +42,7 @@
 
     <script>
         function searchRecommendations() {
+            console.log("Function searchRecommendations() was called!");
             const mood = document.getElementById("mood").value;
             const location = document.getElementById("location").value;
             const age = document.getElementById("age").value;
@@ -65,7 +66,7 @@
                 return;
             }
 
-            // Prepare request URL
+            // Prepare the request URL with query parameters (for GET)
             const requestUrl = "/recommendations?" + new URLSearchParams({
                 mood: mood,
                 location: location,
@@ -75,7 +76,7 @@
 
             console.log("Fetching recommendations from:", requestUrl);
 
-            // Send the input data to the backend via a GET request
+            // Send the data to the backend via a GET request
             fetch(requestUrl)
                 .then(response => {
                     console.log("Response received:", response);
