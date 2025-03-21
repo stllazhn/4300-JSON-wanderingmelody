@@ -1,37 +1,53 @@
-import subprocess
-import threading
-import time
-from flask import Flask, render_template
-import requests
+import json
+import os
+from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
+import ml  # Assuming your ML functions are inside ml.py
+
+# ROOT_PATH for linking with all your files.
+os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..", os.curdir))
+
+# # Load the necessary data (e.g., lyrics dataset)
+# with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'init.json'), 'r') as file:
+#     data = json.load(file)
+#     episodes_df = pd.DataFrame(data['episodes'])
+#     reviews_df = pd.DataFrame(data['reviews'])
 
 app = Flask(__name__)
+CORS(app)
 
-# Function to check if Streamlit is running
-def check_streamlit():
-    try:
-        response = requests.get("http://localhost:8501")
-        return response.status_code == 200
-    except requests.ConnectionError:
-        return False
+@app.route("/")
+def home():
+    return render_template('base.html', title="WanderingMelody")
 
-# Function to run Streamlit in a separate thread
-def run_streamlit():
-    subprocess.run(["streamlit", "run", "streamlit_app.py"])
+@app.route("/recommendations")
+def recommendations():
+    mood = request.args.get("mood")
+    location = request.args.get("location")
+    age = request.args.get("age", default=18, type=int)  # default age is 18 if not provided
+    genre = request.args.get("genre")
 
-# Start Streamlit in the background and ensure it starts before rendering Flask page
-@app.before_first_request
-def before_first_request():
-    # Start Streamlit in a separate thread
-    threading.Thread(target=run_streamlit).start()
+    # Validate inputs (at least mood or genre should be provided)
+    if not mood and not genre:
+        return jsonify({"error": "Please provide at least a mood description or a genre."}), 400
 
-    # Wait for Streamlit to be available
-    while not check_streamlit():
-        time.sleep(1)  # Check every second
+    # Preprocess the lyric data and build necessary indices (using ML functions)
+    dict_of_lyrics = ml.lyric_df[['text']].to_dict(orient="index")
+    cleaned_tokenized_lyrics = ml.tokenize_lyrics(dict_of_lyrics, ml.tokenize)
+    cleaned_tokenized_lyrics = ml.remove_stop_words(ml.custom_stopwords, cleaned_tokenized_lyrics)
+    inverted_index = ml.build_inverted_index(cleaned_tokenized_lyrics)
+    clean_song_count = ml.compute_idf(inverted_index, len(cleaned_tokenized_lyrics))
 
-@app.route('/')
-def index():
-    # Ensure Streamlit is available before loading the page
-    return render_template('streamlit_embed.html')
+    # Call the recommendation function from ml.py
+    recommended_songs, synonyms = ml.recommend_songs(genre, cleaned_tokenized_lyrics, clean_song_count)
 
-if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False)  # `use_reloader=False` to avoid restarting Flask server when Streamlit starts
+    if not recommended_songs:
+        return jsonify([])  # No recommendations found
+    
+    # Get song details (e.g., title, artist, album, genre, rating)
+    song_details = ml.get_song_details(recommended_songs)
+
+    return jsonify(song_details)
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=5000)
