@@ -170,7 +170,7 @@ def recommend_songs(user_genre_input, cleaned_tokenized_lyrics, clean_song_count
             if song_idx not in most_common_songs:
                 continue
 
-        sum_of_words_dict[song_idx] = sum_of_words_dict.get(song_idx, 0) + num_words
+            sum_of_words_dict[song_idx] = sum_of_words_dict.get(song_idx, 0) + num_words
 
     top_30_songs = sorted(sum_of_words_dict, key=sum_of_words_dict.get, reverse=True)[:30]
     
@@ -202,7 +202,12 @@ def recommend_songs(user_genre_input, cleaned_tokenized_lyrics, clean_song_count
 
     print(f"Cleaned Input: {clean_genre_input}")
     print(f"Possible Songs: {possible_songs_dict}")
-    print(f"Most Common Songs: {most_common_songs}")
+    print("Possible Songs Dictionary:", possible_songs_dict)
+    print("Most Common Songs:", most_common_songs)
+    print("Top 30 Songs:", top_30_songs)
+    print("Antonym Counts:", song_antonym_counts)
+    print("Filtered Songs:", filtered_songs)
+    print("result:",result )
     
     return result, word_synonym_dict
 
