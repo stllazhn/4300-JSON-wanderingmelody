@@ -5,10 +5,6 @@ from flask_cors import CORS
 import ml  
 import time
 
-# ROOT_PATH for linking with all your files.
-os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..", os.curdir))
-
-
 app = Flask(__name__)
 CORS(app)
 
