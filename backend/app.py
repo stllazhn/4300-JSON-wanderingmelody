@@ -8,6 +8,12 @@ import time
 # ROOT_PATH for linking with all your files.
 os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..", os.curdir))
 
+# Get the directory of the current script
+current_directory = os.path.dirname(os.path.abspath(__file__))
+print(current_directory)
+
+if not os.path.exists("ml.py"):
+    raise FileNotFoundError("no good!")
 
 app = Flask(__name__)
 CORS(app)
@@ -18,7 +24,7 @@ def home():
 
 @app.route("/recommendations", methods=['GET'])
 def recommendations():
-    start_time = time.time()
+    print("enter")
     mood = request.args.get("mood")
     location = request.args.get("location")
     age = request.args.get("age", default=18, type=int)  # default age is 18 if not provided
@@ -43,8 +49,6 @@ def recommendations():
     
     # Get song details (e.g., title, artist, album, genre, rating)
     song_details = ml.get_song_details(recommended_songs)
-
-    end_time = time.time()
     
     return jsonify(song_details)
 
