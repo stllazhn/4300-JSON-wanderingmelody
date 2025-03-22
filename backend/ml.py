@@ -128,6 +128,8 @@ print("before the recommended song function")
 
 # Main function to process user input and recommend songs
 def recommend_songs(user_genre_input, cleaned_tokenized_lyrics, clean_song_count):
+    inverted_index = build_inverted_index(cleaned_tokenized_lyrics)
+    
     print("after the recommended song function")
     clean_genre_input = remove_stop_words(custom_stopwords, {0: tokenize(user_genre_input)})
     possible_songs_dict = {}
@@ -153,6 +155,48 @@ def recommend_songs(user_genre_input, cleaned_tokenized_lyrics, clean_song_count
 
         max_number = max(song_counts.values(), default=0)
         most_common_songs = [song for song, count in song_counts.items() if count == max_number]
+        
+    if len(most_common_songs) > 40:
+        most_common_songs = most_common_songs[:40]  
+
+    sum_of_words_dict = {}
+
+    for word in clean_genre_input[0]:
+        if word not in inverted_index:
+            continue  
+
+        inv_index_list = inverted_index[word]
+        for song_idx, num_words in inv_index_list:
+            if song_idx not in most_common_songs:
+                continue
+
+        sum_of_words_dict[song_idx] = sum_of_words_dict.get(song_idx, 0) + num_words
+
+    top_30_songs = sorted(sum_of_words_dict, key=sum_of_words_dict.get, reverse=True)[:30]
+    
+    word_antonyms = {word: get_antonyms(word) for word in clean_genre_input[0]}
+
+    # for the top_30_songs, find the songs with these antonyms
+    song_antonym_counts = Counter()
+
+    for word, antonyms in word_antonyms.items():
+        for antonym in antonyms:
+            if antonym in clean_song_count:
+                for song in clean_song_count[antonym]:
+                    if song in top_30_songs: 
+                        song_antonym_counts[song] += 1 
+
+# Step 3: Add songs with no antonyms with values of 0
+    for song in top_30_songs:
+        if song not in song_antonym_counts:
+            song_antonym_counts[song] = 0
+
+# Step 4: Sort songs by least distinct antonyms
+    filtered_songs = sorted(song_antonym_counts.keys(), key=lambda song: song_antonym_counts[song])
+
+    filtered_songs = filtered_songs[:10]
+    
+    result = sort_polarity_scores(filtered_songs, cleaned_tokenized_lyrics, "pos")
     
     word_synonym_dict = {word: list(get_synonyms_of_word(word)) for word in stemmed_user_input_preserve_original if possible_songs_dict.get(word) is None}
 
@@ -160,7 +204,7 @@ def recommend_songs(user_genre_input, cleaned_tokenized_lyrics, clean_song_count
     print(f"Possible Songs: {possible_songs_dict}")
     print(f"Most Common Songs: {most_common_songs}")
     
-    return most_common_songs, word_synonym_dict
+    return result, word_synonym_dict
 
 def get_song_details(song_ids):
     """Return song details (title, artist, album) from the Spotify dataset given a list of song IDs."""
