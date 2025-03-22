@@ -18,11 +18,11 @@ if not os.path.exists("ml.py"):
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/", methods=['GET'])
+@app.route("/")
 def home():
     return render_template('base.html', title="WanderingMelody")
 
-@app.route("/recommendations", methods=['GET'])
+@app.route("/recommendations")
 def recommendations():
     mood = request.args.get("mood")
     location = request.args.get("location")
@@ -30,7 +30,7 @@ def recommendations():
     genre = request.args.get("genre")
 
     # Validate inputs (at least mood or genre should be provided)
-    if not mood and not genre:
+    if not mood:
         return jsonify({"error": "Please provide at least a mood description or a genre."}), 400
 
     # Preprocess the lyric data and build necessary indices (using ML functions)
@@ -41,7 +41,7 @@ def recommendations():
     clean_song_count = ml.compute_idf(inverted_index, len(cleaned_tokenized_lyrics))
 
     # Call the recommendation function from ml.py
-    recommended_songs, synonyms = ml.recommend_songs(genre, cleaned_tokenized_lyrics, clean_song_count)
+    recommended_songs, synonyms = ml.recommend_songs(mood, cleaned_tokenized_lyrics, clean_song_count)
 
     if not recommended_songs:
         return jsonify([])  
