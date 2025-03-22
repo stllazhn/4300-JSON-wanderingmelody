@@ -17,6 +17,7 @@ def home():
 
 @app.route("/recommendations", methods=['GET'])
 def recommendations():
+    print("ihi!")
     mood = request.args.get("mood")
     location = request.args.get("location")
     age = request.args.get("age", default=18, type=int)  # default age is 18 if not provided
