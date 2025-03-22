@@ -126,8 +126,42 @@ def sort_polarity_scores(input_song_list, cleaned_tokenized_lyrics, polarity_typ
 
 print("before the recommended song function")
 
-# Main function to process user input and recommend songs
 def recommend_songs(user_genre_input, cleaned_tokenized_lyrics, clean_song_count):
+     print("after the recommended song function")
+     clean_genre_input = remove_stop_words(custom_stopwords, {0: tokenize(user_genre_input)})
+     possible_songs_dict = {}
+     for word in clean_genre_input[0]:
+         if clean_song_count.get(word) is not None:
+             possible_songs_dict[word] = clean_song_count[word]
+ 
+     stemmed_user_input_preserve_original = [word for word in clean_genre_input[0] if possible_songs_dict.get(word) is None]
+ 
+     for word in stemmed_user_input_preserve_original:
+         if clean_song_count.get(word) is not None:
+             possible_songs_dict[word] = clean_song_count[word]
+ 
+     most_common_songs = []
+     if possible_songs_dict:
+         # song_counts = Counter(song for song_list in possible_songs_dict.values() for song in song_list)
+         song_counts = Counter()
+         for song_list in possible_songs_dict.values():
+             if isinstance(song_list, list):  # Ensure it's a list
+                 song_counts.update(song_list)
+             else:
+                 print(f"Warning: Unexpected value in possible_songs_dict - {song_list}")
+ 
+         max_number = max(song_counts.values(), default=0)
+         most_common_songs = [song for song, count in song_counts.items() if count == max_number]
+ 
+     word_synonym_dict = {word: list(get_synonyms_of_word(word)) for word in stemmed_user_input_preserve_original if possible_songs_dict.get(word) is None}
+ 
+     print(f"Cleaned Input: {clean_genre_input}")
+     print(f"Possible Songs: {possible_songs_dict}")
+     print(f"Most Common Songs: {most_common_songs}")
+ 
+     return most_common_songs, word_synonym_dict
+
+def other_recommend_songs(user_genre_input, cleaned_tokenized_lyrics, clean_song_count):
     inverted_index = build_inverted_index(cleaned_tokenized_lyrics)
     
     print("after the recommended song function")
