@@ -5,6 +5,10 @@ from flask_cors import CORS
 import ml  
 import time
 
+# ROOT_PATH for linking with all your files.
+os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..", os.curdir))
+
+
 app = Flask(__name__)
 CORS(app)
 
@@ -41,7 +45,7 @@ def recommendations():
     song_details = ml.get_song_details(recommended_songs)
 
     end_time = time.time()
-    print(f"Time taken to process request: {end_time - start_time:.2f} seconds")
+    
     return jsonify(song_details)
 
 if __name__ == "__main__":
