@@ -45,6 +45,7 @@ def recommendations():
     song_details = ml.get_song_details(recommended_songs)
 
     end_time = time.time()
+    print(f"Time taken to process request: {end_time - start_time:.2f} seconds")
     return jsonify(song_details)
 
 if __name__ == "__main__":
