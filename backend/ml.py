@@ -9,6 +9,11 @@ import math
 import ssl
 from nltk.corpus import wordnet
 from nltk.sentiment import SentimentIntensityAnalyzer
+from collections import Counter
+from nltk.stem import WordNetLemmatizer
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.decomposition import TruncatedSVD
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 nltk.download('punkt')
 nltk.download('vader_lexicon')
@@ -94,7 +99,7 @@ def compute_idf(inv_idx, n_docs, min_df=0, max_df_ratio=1):
     for word, word_list in inv_idx.items():
         word_count = len(word_list)
         if word_count >= min_df and word_count / n_docs <= max_df_ratio:
-            return_dict[word] = [song_id for song_id, _ in word_list]  # ✅ Store song IDs instead of float IDF
+            return_dict[word] = [song_id for song_id, _ in word_list]  # Store song IDs instead of float IDF
     return return_dict
 
 # Get synonyms of a word
@@ -259,6 +264,138 @@ def get_song_details(song_ids):
             }
             song_details.append(details)
     return song_details
+
+def lemma_words(cleaned_tokenized_lyrics):
+    stemmed_cleaned_tokenized_lyrics = {}
+    lemmatizer = WordNetLemmatizer()
+    for key, list_of_words in cleaned_tokenized_lyrics.items():
+        stemmed_cleaned_tokenized_lyrics[key] = [lemmatizer.lemmatize(word) for word in list_of_words]
+    return stemmed_cleaned_tokenized_lyrics
+
+def find_song_matches_with_svd_return_indexes(user_input, tfidf_vectorizer, svd, topics_for_songs, top_k=len(lyric_df), score_cutoff = 0):
+    user_tfidf = tfidf_vectorizer.transform([user_input])
+    user_topics = svd.transform(user_tfidf)
+
+    similarities = cosine_similarity(user_topics, topics_for_songs)[0]
+    # similarity score > x 
+    # Pos similarity score means some similarity, 0 means no similarity, negative means opposite of similar. scores are 1>x>-1
+    pos_similarity_idx = np.where(similarities > score_cutoff)[0]
+
+    pos_similarity_idx = np.argsort(-similarities)[:top_k]
+
+    return [(idx, similarities[idx]) for idx in pos_similarity_idx]
+
+
+def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics, clean_song_count, user_age_input):
+    #This is a dict: {0: user input as token words}
+    clean_user_description_input = remove_stop_words(custom_stopwords, {0: tokenize(user_description_input)})
+    #This is also a dict: {0: user input as token words}
+    lemma_clean_user_description_input = lemma_words(clean_user_description_input)
+    
+    song_lyrics = cleaned_tokenized_lyrics.values()
+
+    joined_song_lyrics = []
+    for lyrics in song_lyrics:
+        joined_song_lyrics.append(" ".join(lyrics))
+    vectorizer = TfidfVectorizer(stop_words='english')
+    tfidf_matrix = vectorizer.fit_transform(joined_song_lyrics)
+    svd = TruncatedSVD(n_components=min(tfidf_matrix.shape))
+    svd.fit(tfidf_matrix)
+    topics_for_songs = svd.transform(tfidf_matrix)
+
+    # Match songs based on general sentiments(topics)
+    list_of_songs_based_on_topics = find_song_matches_with_svd_return_indexes(user_description_input, vectorizer, svd, topics_for_songs, score_cutoff=0)[:50]
+    
+    # Append (song_idx, score) to topic_possible_songs if the sentiment difference is not too great
+    topic_possible_songs = []
+    for song_idx, score in list_of_songs_based_on_topics:
+        sentiment = lyric_df['sentiment'][song_idx]
+        ideal_sentiment = 1 - (user_age_input / 50)
+        sentiment_difference = abs(ideal_sentiment - sentiment)
+        if sentiment_difference < 1:
+            topic_possible_songs.append((song_idx, score))
+    
+    inverted_index = build_inverted_index(cleaned_tokenized_lyrics)
+    
+    set_of_all_user_input_words_and_adjacents = set(clean_user_description_input[0] + lemma_clean_user_description_input[0])
+    
+    # Set of all songs that contain (not lemma) user input words
+    possible_songs = set() 
+    for word in set_of_all_user_input_words_and_adjacents:
+        song_list = clean_song_count.get(word)
+        if song_list:
+            possible_songs.update(song_list)
+
+    # KEY - Song index (Song in possible_songs): VALUE - Total number of relevant user input words
+    sum_of_words_dict = {}
+    for word in set_of_all_user_input_words_and_adjacents:
+        if word not in inverted_index:
+            continue  
+        inv_index_list = inverted_index[word]
+        for song_idx, num_words in inv_index_list:
+            if song_idx not in possible_songs:
+                continue
+            sum_of_words_dict[song_idx] = sum_of_words_dict.get(song_idx, 0) + num_words
+    
+    list_of_sums = list(sum_of_words_dict.values())
+    min_sum = min(list_of_sums)
+    max_sum = max(list_of_sums)
+            
+    song_list_sim_word_count_scores = []
+    for song_idx, score in list_of_songs_based_on_topics:
+        if song_idx in possible_songs:
+            normalized_sum = (sum_of_words_dict[song_idx] - min_sum) / (max_sum - min_sum) if max_sum > min_sum else 0
+            new_score = score + normalized_sum * 0.25
+            song_list_sim_word_count_scores.append((song_idx, new_score))
+        else:
+            song_list_sim_word_count_scores.append((song_idx, score))
+    
+    song_list_sim_word_count_scores = sorted(song_list_sim_word_count_scores, key=lambda x: -x[1])
+    
+    word_antonyms = {word: get_antonyms(word) for word in set_of_all_user_input_words_and_adjacents}
+
+    song_antonym_counts = Counter()
+    for word, antonyms in word_antonyms.items(): 
+        for antonym in antonyms:
+            if antonym in clean_song_count:
+                for song in clean_song_count[antonym]:
+                    if song in [song_tup[0] for song_tup in song_list_sim_word_count_scores]: 
+                        song_antonym_counts[song] += 1 
+                        
+    # Normalize antonym counts
+    if song_antonym_counts:
+        min_antonym_count = min(song_antonym_counts.values())
+        max_antonym_count = max(song_antonym_counts.values())
+
+        normalized_antonym_counts = {}
+        for song_idx, count in song_antonym_counts.items():
+            normalized_antonym_counts[song_idx] = (count - min_antonym_count) / (max_antonym_count - min_antonym_count) if max_antonym_count > min_antonym_count else 0
+    else:
+        normalized_antonym_counts = {}
+
+    song_list_sim_word_count_antonym_scores = []
+    for song_idx, score in song_list_sim_word_count_scores:
+        new_score = score
+
+        if song_idx in normalized_antonym_counts:
+            antonym_score = normalized_antonym_counts[song_idx]
+            new_score -= antonym_score * 0.1
+            
+        song_list_sim_word_count_antonym_scores.append((song_idx, new_score))
+
+    song_list_sim_word_count_antonym_scores = sorted(song_list_sim_word_count_antonym_scores, key=lambda x: -x[1])
+    
+    # This part, the synonyms, is pretty much useless
+    word_synonym_dict = {word: list(get_synonyms_of_word(word)) for word in set_of_all_user_input_words_and_adjacents if word not in clean_song_count}
+
+    print(f"Cleaned Input: {clean_user_description_input}")
+    print(f"Possible Songs: {possible_songs}")
+    print("Possible Songs Dictionary:", clean_song_count)
+    print("Top 30 Songs:", song_list_sim_word_count_scores[:30])
+    print("Antonym Counts:", song_antonym_counts)
+    print("Filtered Songs:", topic_possible_songs)
+    
+    return song_list_sim_word_count_antonym_scores[:10], word_synonym_dict
 
 # if __name__ == "__main__":
 #     print("Calling recommend_songs manually for debugging...")
