@@ -16,6 +16,8 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
 nltk.download('vader_lexicon')
 
 try:
@@ -44,9 +46,10 @@ custom_stopwords = set([
 
 # Load datasets
 #spotify_df = pd.read_csv("mini_spotify_track_db.csv")
-spotify_df = pd.read_json("backend/spotify-tracks-dataset.json")
-lyric_df = pd.read_json("backend/spotify_millsongdata.json")
+spotify_df = pd.read_json("spotify-tracks-dataset.json")
+lyric_df = pd.read_json("spotify_millsongdata.json")
 #lyric_df = pd.read_csv("mini_spotify_db.csv")
+
 
 print("Spotify Dataset Sample:")
 print(spotify_df.head())
@@ -133,9 +136,10 @@ def sort_polarity_scores(input_song_list, cleaned_tokenized_lyrics, polarity_typ
 
 print("before the recommended song function")
 
-def recommend_songs(user_genre_input, cleaned_tokenized_lyrics, clean_song_count):
+def recommend_songs(mood, cleaned_tokenized_lyrics, clean_song_count, weather):
      print("after the recommended song function")
-     clean_genre_input = remove_stop_words(custom_stopwords, {0: tokenize(user_genre_input)})
+     combined_mood = f"{mood} {weather}".strip()
+     clean_genre_input = remove_stop_words(custom_stopwords, {0: tokenize(combined_mood)})
      possible_songs_dict = {}
      for word in clean_genre_input[0]:
          if clean_song_count.get(word) is not None:
@@ -289,6 +293,7 @@ def find_song_matches_with_svd_return_indexes(user_input, tfidf_vectorizer, svd,
 
 
 def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics, clean_song_count, user_age_input):
+    print("using SVD")
     #This is a dict: {0: user input as token words}
     clean_user_description_input = remove_stop_words(custom_stopwords, {0: tokenize(user_description_input)})
     #This is also a dict: {0: user input as token words}
@@ -397,7 +402,7 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics, clean_
     print("Antonym Counts:", song_antonym_counts)
     print("Filtered Songs:", topic_possible_songs)
     
-    return song_list_sim_word_count_antonym_scores[:10], word_synonym_dict
+    return song_list_sim_word_count_antonym_scores, word_synonym_dict
 
 # if __name__ == "__main__":
 #     print("Calling recommend_songs manually for debugging...")

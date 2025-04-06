@@ -66,6 +66,17 @@
     margin-top: 50px;
 }
 
+.styled-input {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    box-sizing: border-box;
+    appearance: none; /* optional for custom dropdown arrow */
+    background-color: white;
+}
+
 .song-box {
     background-color: #ece7e7;
     margin-bottom: 20px;

@@ -7,114 +7,125 @@
     href="https://fonts.googleapis.com/css2?family=Pacifico&family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
     rel="stylesheet">
 
-<body>
-    <div class="full-body-container">
-        <div class="top-text">
-            <h1 id="wandering-melody">🎶 WanderingMelody</h1>
-            <p>Describe your mood or trip experience and get music recommendations!</p>
-
-            <!-- Mood input -->
-            <div class="input-box">
-                <textarea placeholder="Describe your mood or trip experience" id="mood"></textarea>
+    <body>
+        <div class="full-body-container">
+            <div class="top-text">
+                <h1 id="wandering-melody">🎶 WanderingMelody</h1>
+                <p>Describe your mood or trip experience and get music recommendations!</p>
+    
+                <!-- Mood input -->
+                <div class="input-box">
+                    <textarea placeholder="Describe your mood or trip experience" id="mood"></textarea>
+                </div>
+    
+                <!-- Location input -->
+                <div class="input-box">
+                    <input type="text" placeholder="Search Location (Optional)" id="location">
+                </div>
+    
+                <!-- Age input -->
+                <div class="input-box">
+                    <input type="number" placeholder="Enter Age (Optional)" id="age" min="1" max="100" value="18">
+                </div>
+    
+                <!-- Genre input -->
+                <div class="input-box">
+                    <input type="text" placeholder="Enter Music Genre" id="genre">
+                </div>
+    
+                <!-- Weather dropdown -->
+                <div class="input-box">
+                    <label for="weather"></label>
+                    <select class="styled-input" id="weather" name="weather">
+                        <option value="">Select Weather</option>
+                        <option value="sunny">Sunny</option>
+                        <option value="cloudy">Cloudy</option>
+                        <option value="rainy">Rainy</option>
+                        <option value="stormy">Stormy</option>
+                        <option value="snowy">Snowy</option>
+                        <option value="foggy">Foggy</option>
+                        <option value="windy">Windy</option>
+                    </select>
+                </div>
+    
+                <button onclick="searchRecommendations()">Search</button>
             </div>
-
-            <!-- Location input -->
-            <div class="input-box">
-                <input type="text" placeholder="Search Location (Optional)" id="location">
-            </div>
-
-            <!-- Age input -->
-            <div class="input-box">
-                <input type="number" placeholder="Enter Age (Optional)" id="age" min="1" max="100" value="18">
-            </div>
-
-            <!-- Genre input -->
-            <div class="input-box">
-                <input type="text" placeholder="Enter Music Genre" id="genre">
-            </div>
-
-            <button onclick="searchRecommendations()">Search</button>
+    
+            <div id="answer-box"></div>
+            <div id="loading-message" style="display:none;">Loading recommendations...</div>
         </div>
-
-        <div id="answer-box"></div>
-        <div id="loading-message" style="display:none;">Loading recommendations...</div>
-    </div>
-
-    <script>
-        function searchRecommendations() {
-            console.log("Function searchRecommendations() was called!");
-            const mood = document.getElementById("mood").value;
-            const location = document.getElementById("location").value;
-            const age = document.getElementById("age").value;
-            const genre = document.getElementById("genre").value;
-
-            console.log("Search initiated with parameters:", { mood, location, age, genre });
-
-            // Clear previous results immediately
-            const answerBox = document.getElementById("answer-box");
-            answerBox.innerHTML = "";
-
-            // Show loading message
-            const loadingMessage = document.getElementById("loading-message");
-            loadingMessage.style.display = "block";
-
-            // If no mood or genre is provided, alert the user
-            if (!mood && !genre) {
-                alert("Please provide at least a mood description or a genre.");
-                loadingMessage.style.display = "none";  // Hide loading message
-                console.log("Input validation failed: Both mood and genre are missing.");
-                return;
+    
+        <script>
+            function searchRecommendations() {
+                console.log("Function searchRecommendations() was called!");
+                const mood = document.getElementById("mood").value;
+                const location = document.getElementById("location").value;
+                const age = document.getElementById("age").value;
+                const genre = document.getElementById("genre").value;
+                const weather = document.getElementById("weather").value;
+    
+                console.log("Search initiated with parameters:", { mood, location, age, genre, weather });
+    
+                const answerBox = document.getElementById("answer-box");
+                answerBox.innerHTML = "";
+    
+                const loadingMessage = document.getElementById("loading-message");
+                loadingMessage.style.display = "block";
+    
+                if (!mood && !genre) {
+                    alert("Please provide at least a mood description or a genre.");
+                    loadingMessage.style.display = "none";
+                    console.log("Input validation failed: Both mood and genre are missing.");
+                    return;
+                }
+    
+                const requestUrl = "/recommendations?" + new URLSearchParams({
+                    mood: mood,
+                    location: location,
+                    age: age,
+                    genre: genre,
+                    weather: weather  // ✅ included
+                }).toString();
+    
+                console.log("Fetching recommendations from:", requestUrl);
+    
+                fetch(requestUrl)
+                    .then(response => {
+                        console.log("Response received:", response);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Parsed response data:", data);
+                        loadingMessage.style.display = "none";
+    
+                        if (data && data.length > 0) {
+                            data.forEach(song => {
+                                let songDiv = document.createElement("div");
+                                songDiv.classList.add("song-box");
+                                songDiv.innerHTML = `
+                                    <div class="song-details">
+                                        <h3 class="song-title">${song.title}</h3>
+                                        <p class="song-artist">by ${song.artist}</p>
+                                        <p class="song-album">Album: ${song.album} | Genre: ${song.genre}</p>
+                                        <p class="song-rating">Rating: ${song.rating || 'Not available'}</p>
+                                    </div>
+                                `;
+                                answerBox.appendChild(songDiv);
+                            });
+                        } else {
+                            console.log("No songs found.");
+                            answerBox.innerHTML = "<p>No songs found, try another genre or mood.</p>";
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Fetch error:", error);
+                        loadingMessage.style.display = "none";
+                        alert("Error fetching recommendations. Please try again.");
+                    });
             }
-
-            // Prepare request URL
-            const requestUrl = "/recommendations?" + new URLSearchParams({
-                mood: mood,
-                location: location,
-                age: age,
-                genre: genre
-            }).toString();
-
-            console.log("Fetching recommendations from:", requestUrl);
-
-            // Send the data to the backend via a GET request
-            fetch(requestUrl)
-                .then(response => {
-                    console.log("Response received:", response);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log("Parsed response data:", data);
-                    loadingMessage.style.display = "none";  // Hide loading message
-
-                    if (data && data.length > 0) {
-                        // Display the recommended songs
-                        data.forEach(song => {
-                            let songDiv = document.createElement("div");
-                            songDiv.classList.add("song-box");
-                            songDiv.innerHTML = `
-                                <div class="song-details">
-                                    <h3 class="song-title">${song.title}</h3>
-                                    <p class="song-artist">by ${song.artist}</p>
-                                    <p class="song-album">Album: ${song.album} | Genre: ${song.genre}</p>
-                                    <p class="song-rating">Rating: ${song.rating || 'Not available'}</p>
-                                </div>
-                            `;
-                            answerBox.appendChild(songDiv);
-                        });
-                    } else {
-                        // If no songs are found, display a message
-                        console.log("No songs found.");
-                        answerBox.innerHTML = "<p>No songs found, try another genre or mood.</p>";
-                    }
-                })
-                .catch(error => {
-                    console.error("Fetch error:", error);
-                    loadingMessage.style.display = "none";  // Hide loading message on error
-                    alert("Error fetching recommendations. Please try again.");
-                });
-        }
-    </script>
-</body>
+        </script>
+    </body>
+    

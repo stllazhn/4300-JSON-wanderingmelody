@@ -3,17 +3,9 @@ import os
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 import ml  
-import time
 
 # ROOT_PATH for linking with all your files.
 os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..", os.curdir))
-
-# Get the directory of the current script
-current_directory = os.path.dirname(os.path.abspath(__file__))
-print(current_directory)
-
-if not os.path.exists("ml.py"):
-    raise FileNotFoundError("no good!")
 
 app = Flask(__name__)
 CORS(app)
@@ -26,29 +18,40 @@ def home():
 def recommendations():
     mood = request.args.get("mood")
     location = request.args.get("location")
-    age = request.args.get("age", default=18, type=int)  # default age is 18 if not provided
+    age = request.args.get("age", default=18, type=int)
     genre = request.args.get("genre")
+    weather = request.args.get("weather")  
 
     # Validate inputs (at least mood or genre should be provided)
     if not mood:
         return jsonify({"error": "Please provide at least a mood description or a genre."}), 400
 
-    # Preprocess the lyric data and build necessary indices (using ML functions)
+    # map weather to mood descriptor
+    weather_mood_map = {
+        "sunny": "happy",
+        "cloudy": "melancholy",
+        "rainy": "sad",
+        "stormy": "angry",
+        "snowy": "calm",
+        "foggy": "mysterious",
+        "windy": "restless"
+    }
+    inferred_weather_mood = weather_mood_map.get(weather.lower(), "") if weather else ""
+
+    # Preprocess the lyric data and build necessary indices
     dict_of_lyrics = ml.lyric_df[['text']].to_dict(orient="index")
     cleaned_tokenized_lyrics = ml.tokenize_lyrics(dict_of_lyrics, ml.tokenize)
     cleaned_tokenized_lyrics = ml.remove_stop_words(ml.custom_stopwords, cleaned_tokenized_lyrics)
     inverted_index = ml.build_inverted_index(cleaned_tokenized_lyrics)
     clean_song_count = ml.compute_idf(inverted_index, len(cleaned_tokenized_lyrics))
 
-    # Call the recommendation function from ml.py
-    recommended_songs, synonyms = ml.recommend_songs(mood, cleaned_tokenized_lyrics, clean_song_count)
+    # Call the recommendation function
+    recommended_songs, synonyms = ml.recommend_songs(mood, cleaned_tokenized_lyrics, clean_song_count, inferred_weather_mood)
 
     if not recommended_songs:
         return jsonify([])  
     
-    # Get song details (e.g., title, artist, album, genre, rating)
     song_details = ml.get_song_details(recommended_songs)
-    
     return jsonify(song_details)
 
 if __name__ == "__main__":
