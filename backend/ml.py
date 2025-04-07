@@ -18,11 +18,6 @@ import joblib
 import scipy.sparse
 import numpy as np
 
-nltk.download('punkt')
-nltk.download('wordnet')
-nltk.download('omw-1.4')
-nltk.download('vader_lexicon')
-
 try:
     _create_unverified_https_context = ssl._create_unverified_context
 except AttributeError:
@@ -56,8 +51,6 @@ lyric_df = pd.read_json("spotify_millsongdata.json")
 def polarity_scores_for_songs(df):
     sia = SentimentIntensityAnalyzer() 
     df['sentiment'] = df['text'].apply(lambda song_lyrics: sia.polarity_scores(song_lyrics)['compound'])
-    
-polarity_scores_for_songs(lyric_df)
 
 print("Spotify Dataset Sample:")
 print(spotify_df.head())
