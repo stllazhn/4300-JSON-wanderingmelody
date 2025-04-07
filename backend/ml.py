@@ -14,6 +14,9 @@ from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
+import joblib
+import scipy.sparse
+import numpy as np
 
 nltk.download('punkt')
 nltk.download('wordnet')
@@ -50,6 +53,11 @@ spotify_df = pd.read_json("spotify-tracks-dataset.json")
 lyric_df = pd.read_json("spotify_millsongdata.json")
 #lyric_df = pd.read_csv("mini_spotify_db.csv")
 
+def polarity_scores_for_songs(df):
+    sia = SentimentIntensityAnalyzer() 
+    df['sentiment'] = df['text'].apply(lambda song_lyrics: sia.polarity_scores(song_lyrics)['compound'])
+    
+polarity_scores_for_songs(lyric_df)
 
 print("Spotify Dataset Sample:")
 print(spotify_df.head())
@@ -300,15 +308,15 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics, clean_
     lemma_clean_user_description_input = lemma_words(clean_user_description_input)
     
     song_lyrics = cleaned_tokenized_lyrics.values()
-
+    
+    print("big files")
     joined_song_lyrics = []
     for lyrics in song_lyrics:
         joined_song_lyrics.append(" ".join(lyrics))
-    vectorizer = TfidfVectorizer(stop_words='english')
-    tfidf_matrix = vectorizer.fit_transform(joined_song_lyrics)
-    svd = TruncatedSVD(n_components=min(tfidf_matrix.shape))
-    svd.fit(tfidf_matrix)
-    topics_for_songs = svd.transform(tfidf_matrix)
+    vectorizer = joblib.load('vectorizer.pkl')
+    #tfidf_matrix = scipy.sparse.load_npz('tfidf_matrix.npz')
+    svd = joblib.load('svd_model.pkl')
+    topics_for_songs = scipy.sparse.load_npz('topics_for_songs.npz')
 
     # Match songs based on general sentiments(topics)
     list_of_songs_based_on_topics = find_song_matches_with_svd_return_indexes(user_description_input, vectorizer, svd, topics_for_songs, score_cutoff=0)[:50]

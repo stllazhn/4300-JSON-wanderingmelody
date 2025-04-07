@@ -3,6 +3,8 @@ import os
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 import ml  
+import numpy as np
+import pandas as pd
 
 # ROOT_PATH for linking with all your files.
 os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..", os.curdir))
@@ -37,6 +39,10 @@ def recommendations():
         "windy": "restless"
     }
     inferred_weather_mood = weather_mood_map.get(weather.lower(), "") if weather else ""
+    
+    spotify_df = pd.read_json("spotify-tracks-dataset.json")
+    lyric_df = pd.read_json("spotify_millsongdata.json")
+    ml.polarity_scores_for_songs(lyric_df)
 
     # Preprocess the lyric data and build necessary indices
     dict_of_lyrics = ml.lyric_df[['text']].to_dict(orient="index")
