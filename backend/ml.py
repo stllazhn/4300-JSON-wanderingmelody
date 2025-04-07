@@ -313,6 +313,7 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics, clean_
     # Match songs based on general sentiments(topics)
     list_of_songs_based_on_topics = find_song_matches_with_svd_return_indexes(user_description_input, vectorizer, svd, topics_for_songs, score_cutoff=0)[:50]
     
+    print("possible songs check")
     # Append (song_idx, score) to topic_possible_songs if the sentiment difference is not too great
     topic_possible_songs = []
     for song_idx, score in list_of_songs_based_on_topics:
@@ -333,6 +334,7 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics, clean_
         if song_list:
             possible_songs.update(song_list)
 
+    print("song index check")
     # KEY - Song index (Song in possible_songs): VALUE - Total number of relevant user input words
     sum_of_words_dict = {}
     for word in set_of_all_user_input_words_and_adjacents:
@@ -348,6 +350,7 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics, clean_
     min_sum = min(list_of_sums)
     max_sum = max(list_of_sums)
             
+    print("score addition check")
     song_list_sim_word_count_scores = []
     for song_idx, score in list_of_songs_based_on_topics:
         if song_idx in possible_songs:
@@ -361,6 +364,7 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics, clean_
     
     word_antonyms = {word: get_antonyms(word) for word in set_of_all_user_input_words_and_adjacents}
 
+    print("antonym check")
     song_antonym_counts = Counter()
     for word, antonyms in word_antonyms.items(): 
         for antonym in antonyms:
@@ -390,6 +394,7 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics, clean_
             
         song_list_sim_word_count_antonym_scores.append((song_idx, new_score))
 
+    print("sort")
     song_list_sim_word_count_antonym_scores = sorted(song_list_sim_word_count_antonym_scores, key=lambda x: -x[1])
     
     # This part, the synonyms, is pretty much useless
