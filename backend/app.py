@@ -42,7 +42,6 @@ def recommendations():
     
     spotify_df = pd.read_json("spotify-tracks-dataset.json")
     lyric_df = pd.read_json("spotify_millsongdata.json")
-    ml.polarity_scores_for_songs(lyric_df)
 
     # Preprocess the lyric data and build necessary indices
     dict_of_lyrics = ml.lyric_df[['text']].to_dict(orient="index")
