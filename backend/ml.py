@@ -268,13 +268,29 @@ def get_song_details(song_ids):
     """Return song details (title, artist, album) from the Spotify dataset given a list of song IDs."""
     song_details = []
     for song_id in song_ids:
-        song_row = spotify_df.loc[spotify_df.index == song_id]  # Find the row with the given song_id
+        song_row = lyric_df.loc[lyric_df.index == song_id]  # Find the row with the given song_id
         if not song_row.empty:
             details = {
-                "title": song_row["track_name"].values[0],
-                "artist": song_row["artists"].values[0],
-                "album": song_row["album_name"].values[0],
-                "genre": song_row["track_genre"].values[0]
+                "title": song_row["song"].values[0],
+                "artist": song_row["artist"].values[0]
+                #"album": song_row["album_name"].values[0],
+                #"genre": song_row["track_genre"].values[0]
+            }
+            song_details.append(details)
+    return song_details
+
+def get_song_details_with_ratings(song_tuple_list):
+    """Return song details (title, artist, album) from the Spotify dataset given a list of song IDs."""
+    song_details = []
+    for song_id,song_rating in song_tuple_list:
+        song_row = lyric_df.loc[lyric_df.index == song_id]  # Find the row with the given song_id
+        if not song_row.empty:
+            details = {
+                "title": song_row["song"].values[0],
+                "artist": song_row["artist"].values[0],
+                #"album": song_row["album_name"].values[0],
+                #"genre": song_row["track_genre"].values[0],
+                "rating": song_rating
             }
             song_details.append(details)
     return song_details
@@ -411,11 +427,10 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics, clean_
     print(f"Cleaned Input: {clean_user_description_input}")
     print(f"Possible Songs: {possible_songs}")
     print("Possible Songs Dictionary:", clean_song_count)
-    print("Top 30 Songs:", song_list_sim_word_count_scores[:30])
     print("Antonym Counts:", song_antonym_counts)
     print("Filtered Songs:", topic_possible_songs)
     
-    return song_list_sim_word_count_antonym_scores, word_synonym_dict
+    return song_list_sim_word_count_antonym_scores[:10], word_synonym_dict
 
 # if __name__ == "__main__":
 #     print("Calling recommend_songs manually for debugging...")
