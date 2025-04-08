@@ -43,6 +43,8 @@ def ensure_nltk_resources():
     ]
     for res in required_resources:
         safe_nltk_download(res)
+        
+ensure_nltk_resources()
 
 # Define a stopwords list manually
 custom_stopwords = set([
