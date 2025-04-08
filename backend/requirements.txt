@@ -27,4 +27,5 @@ Werkzeug==2.2.2
 nltk==3.8.1
 flask-cors==3.0.10
 fsspec
+scikit-learn==1.4.1.post1
 
