@@ -17,6 +17,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import joblib
 import scipy.sparse
 import numpy as np
+from nltk.data import find
+import logging
 
 try:
     _create_unverified_https_context = ssl._create_unverified_context
@@ -24,6 +26,23 @@ except AttributeError:
     pass
 else:
     ssl._create_default_https_context = _create_unverified_https_context
+    
+def safe_nltk_download(resource):
+    try:
+        find(resource)
+    except LookupError:
+        logging.info(f"download missing nltk resource: {resource}")
+        nltk.download(resource)
+
+def ensure_nltk_resources():
+    required_resources = [
+        'stopwords',
+        'punkt',
+        'wordnet',
+        'omw-1.4'  
+    ]
+    for res in required_resources:
+        safe_nltk_download(res)
 
 # Define a stopwords list manually
 custom_stopwords = set([
@@ -292,7 +311,7 @@ def lemma_words(cleaned_tokenized_lyrics):
     stemmed_cleaned_tokenized_lyrics = {}
     lemmatizer = WordNetLemmatizer()
     for key, list_of_words in cleaned_tokenized_lyrics.items():
-        stemmed_cleaned_tokenized_lyrics[key] = [lemmatizer.lemmatize(word) for word in list_of_words]
+        stemmed_cleaned_tokenized_lyrics[key] = [lemmatizer.lemma tize(word) for word in list_of_words]
     return stemmed_cleaned_tokenized_lyrics
 
 def find_song_matches_with_svd_return_indexes(user_input, tfidf_vectorizer, svd, topics_for_songs, top_k=len(lyric_df), score_cutoff = 0):
