@@ -311,7 +311,7 @@ def lemma_words(cleaned_tokenized_lyrics):
     stemmed_cleaned_tokenized_lyrics = {}
     lemmatizer = WordNetLemmatizer()
     for key, list_of_words in cleaned_tokenized_lyrics.items():
-        stemmed_cleaned_tokenized_lyrics[key] = [lemmatizer.lemma tize(word) for word in list_of_words]
+        stemmed_cleaned_tokenized_lyrics[key] = [lemmatizer.lemmatize(word) for word in list_of_words]
     return stemmed_cleaned_tokenized_lyrics
 
 def find_song_matches_with_svd_return_indexes(user_input, tfidf_vectorizer, svd, topics_for_songs, top_k=len(lyric_df), score_cutoff = 0):
