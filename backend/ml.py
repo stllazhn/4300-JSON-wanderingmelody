@@ -446,6 +446,8 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics, clean_
     
     return song_list_sim_word_count_antonym_scores[:10], word_synonym_dict
 
+print('loaded all functions ml.py')
+
 # if __name__ == "__main__":
 #     print("Calling recommend_songs manually for debugging...")
 #     test_genre = "sad"
