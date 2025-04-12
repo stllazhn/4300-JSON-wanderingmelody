@@ -31,9 +31,9 @@ clean_song_count = ml.compute_idf(inverted_index, len(cleaned_tokenized_lyrics))
 
 # Remove the refences to the memory-consuming datastructures after
 # after they are done being used
-del dict_of_lyrics, cleaned_tokenized_lyrics, inverted_index
+#del dict_of_lyrics, cleaned_tokenized_lyrics, inverted_index
 # Manually call the garbage collector to clean up memory (just in case)
-gc.collect()
+#gc.collect()
 
 @app.route("/recommendations")
 def recommendations():
