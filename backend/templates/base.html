@@ -176,8 +176,22 @@
                 return;
             }
 
-            // Create promises for both API calls to run concurrently
+            // Create promises for both calls to run concurrently
             const promises = [];
+
+            // Places recommendations promise (only if location is provided)
+            let placesPromise = Promise.resolve([]);
+            if (location && location.trim() !== "") {
+                placesPromise = fetch(`/get_places?location=${encodeURIComponent(location)}`)
+                    .then(response => {
+                        console.log("Places response received:", response);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    });
+                promises.push(placesPromise);
+            }
 
             // Music recommendations promise
             const songsPromise = fetch("/recommendations?" + new URLSearchParams({
@@ -196,51 +210,6 @@
                 });
 
             promises.push(songsPromise);
-
-            // Places recommendations promise (only if location is provided)
-            let placesPromise = Promise.resolve([]);
-            if (location && location.trim() !== "") {
-                placesPromise = fetch(`/get_places?location=${encodeURIComponent(location)}`)
-                    .then(response => {
-                        console.log("Places response received:", response);
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-                        return response.json();
-                    });
-                promises.push(placesPromise);
-            }
-
-            // Process song results
-            songsPromise
-                .then(data => {
-                    console.log("Parsed song data:", data);
-                    loadingMessage.style.display = "none";
-
-                    if (data && data.length > 0) {
-                        data.forEach(song => {
-                            let songDiv = document.createElement("div");
-                            songDiv.classList.add("song-box");
-                            songDiv.innerHTML = `
-                                <div class="song-details">
-                                    <h3 class="song-title">${song.title}</h3>
-                                    <p class="song-artist">by ${song.artist}</p>
-                                    <p class="song-album">Album: ${song.album} | Genre: ${song.genre}</p>
-                                    <p class="song-rating">Rating: ${song.rating || 'Not available'}</p>
-                                </div>
-                            `;
-                            answerBox.appendChild(songDiv);
-                        });
-                    } else {
-                        console.log("No songs found.");
-                        answerBox.innerHTML = "<p>No songs found, try another genre or mood.</p>";
-                    }
-                })
-                .catch(error => {
-                    console.error("Fetch error for songs:", error);
-                    loadingMessage.style.display = "none";
-                    answerBox.innerHTML = "<p>Error fetching song recommendations. Please try again.</p>";
-                });
 
             // Process places results
             if (location && location.trim() !== "") {
@@ -278,6 +247,37 @@
                         document.getElementById("places-column").style.display = "none";
                     });
             }
+
+            // Process song results
+            songsPromise
+                .then(data => {
+                    console.log("Parsed song data:", data);
+                    loadingMessage.style.display = "none";
+
+                    if (data && data.length > 0) {
+                        data.forEach(song => {
+                            let songDiv = document.createElement("div");
+                            songDiv.classList.add("song-box");
+                            songDiv.innerHTML = `
+                                <div class="song-details">
+                                    <h3 class="song-title">${song.title}</h3>
+                                    <p class="song-artist">by ${song.artist}</p>
+                                    <p class="song-album">Album: ${song.album} | Genre: ${song.genre}</p>
+                                    <p class="song-rating">Rating: ${song.rating || 'Not available'}</p>
+                                </div>
+                            `;
+                            answerBox.appendChild(songDiv);
+                        });
+                    } else {
+                        console.log("No songs found.");
+                        answerBox.innerHTML = "<p>No songs found, try another genre or mood.</p>";
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch error for songs:", error);
+                    loadingMessage.style.display = "none";
+                    answerBox.innerHTML = "<p>Error fetching song recommendations. Please try again.</p>";
+                });
         }
 
         // Function to generate star rating HTML
