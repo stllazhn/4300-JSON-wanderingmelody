@@ -6,6 +6,7 @@
 <link
     href="https://fonts.googleapis.com/css2?family=Pacifico&family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
     rel="stylesheet">
+
 <style>
     /* Styles for the side-by-side layout */
     .results-container {
@@ -281,29 +282,23 @@
 
         // Function to generate star rating HTML
         function generateStarRating(rating) {
-            if (!rating) return '<span class="star-rating">☆☆☆☆☆</span>';
+            if (rating == null) return '<span class="star-rating">☆☆☆☆☆</span>';
 
-            // Round to nearest half
-            const roundedRating = Math.round(rating * 2) / 2;
+            const roundedRating = rating % 1 >= 0.5 ? Math.ceil(rating) : Math.floor(rating);
             let stars = '';
 
             // Add full stars
-            for (let i = 1; i <= Math.floor(roundedRating); i++) {
+            for (let i = 0; i < roundedRating; i++) {
                 stars += '★';
             }
 
-            // Add half star if needed
-            if (roundedRating % 1 !== 0) {
-                stars += '⯪';
-            }
-
             // Add empty stars
-            const emptyStars = 5 - Math.ceil(roundedRating);
-            for (let i = 1; i <= emptyStars; i++) {
+            for (let i = 0; i < 5 - roundedRating; i++) {
                 stars += '☆';
             }
 
             return `<span class="star-rating">${stars}</span>`;
         }
+
     </script>
 </body>
