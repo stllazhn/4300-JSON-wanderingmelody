@@ -149,42 +149,71 @@
 
             console.log("Search initiated with parameters:", { mood, location, age, genre, weather });
 
+            // Reset the UI
             const answerBox = document.getElementById("answer-box");
             answerBox.innerHTML = "";
 
             const loadingMessage = document.getElementById("loading-message");
             loadingMessage.style.display = "block";
 
-            // Hide places column by default
-            document.getElementById("places-column").style.display = "none";
+            // Hide places column initially
+            const placesColumn = document.getElementById("places-column");
+            placesColumn.style.display = "none";
+
+            // Hide places results and show loading indicator if location is provided
+            if (location && location.trim() !== "") {
+                placesColumn.style.display = "block";
+                document.getElementById("places-box").innerHTML = "";
+                document.getElementById("places-loading").style.display = "block";
+            }
 
             if (!mood && !genre) {
                 alert("Please provide at least a mood description or a genre.");
                 loadingMessage.style.display = "none";
+                document.getElementById("places-loading").style.display = "none";
                 console.log("Input validation failed: Both mood and genre are missing.");
                 return;
             }
 
-            const requestUrl = "/recommendations?" + new URLSearchParams({
+            // Create promises for both API calls to run concurrently
+            const promises = [];
+
+            // Music recommendations promise
+            const songsPromise = fetch("/recommendations?" + new URLSearchParams({
                 mood: mood,
                 location: location,
                 age: age,
                 genre: genre,
                 weather: weather
-            }).toString();
-
-            console.log("Fetching recommendations from:", requestUrl);
-
-            fetch(requestUrl)
+            }).toString())
                 .then(response => {
-                    console.log("Response received:", response);
+                    console.log("Songs response received:", response);
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
                     return response.json();
-                })
+                });
+
+            promises.push(songsPromise);
+
+            // Places recommendations promise (only if location is provided)
+            let placesPromise = Promise.resolve([]);
+            if (location && location.trim() !== "") {
+                placesPromise = fetch(`/get_places?location=${encodeURIComponent(location)}`)
+                    .then(response => {
+                        console.log("Places response received:", response);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    });
+                promises.push(placesPromise);
+            }
+
+            // Process song results
+            songsPromise
                 .then(data => {
-                    console.log("Parsed response data:", data);
+                    console.log("Parsed song data:", data);
                     loadingMessage.style.display = "none";
 
                     if (data && data.length > 0) {
@@ -201,31 +230,53 @@
                             `;
                             answerBox.appendChild(songDiv);
                         });
-
-                        // Only fetch places if location is provided
-                        if (location) {
-                            fetchPlaces(location);
-                        }
                     } else {
                         console.log("No songs found.");
                         answerBox.innerHTML = "<p>No songs found, try another genre or mood.</p>";
-
-                        // Still fetch places even if no songs are found, but only if location is provided
-                        if (location) {
-                            fetchPlaces(location);
-                        }
                     }
                 })
                 .catch(error => {
-                    console.error("Fetch error:", error);
+                    console.error("Fetch error for songs:", error);
                     loadingMessage.style.display = "none";
-                    alert("Error fetching recommendations. Please try again.");
-
-                    // Try to fetch places even if song recommendations fail, but only if location is provided
-                    if (location) {
-                        fetchPlaces(location);
-                    }
+                    answerBox.innerHTML = "<p>Error fetching song recommendations. Please try again.</p>";
                 });
+
+            // Process places results
+            if (location && location.trim() !== "") {
+                placesPromise
+                    .then(places => {
+                        console.log("Places data received:", places);
+                        document.getElementById("places-loading").style.display = "none";
+
+                        if (places && places.length > 0) {
+                            let placesHtml = "";
+                            places.forEach((place, index) => {
+                                // Generate star rating
+                                const starRating = generateStarRating(place.rating);
+
+                                placesHtml += `
+                                    <div class="place-item">
+                                        <p class="place-name">${index + 1}. ${place.name}</p>
+                                        <p>${starRating} (${place.rating || 'N/A'})</p>
+                                        ${place.reviews ? `<p>Reviews: ${place.reviews}</p>` : ''}
+                                        ${place.category ? `<p>Category: ${place.category}</p>` : ''}
+                                        ${place.address ? `<p>Address: ${place.address}</p>` : ''}
+                                    </div>
+                                `;
+                            });
+                            document.getElementById("places-box").innerHTML = placesHtml;
+                        } else {
+                            // If no places found, hide the places column
+                            document.getElementById("places-column").style.display = "none";
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching places:", error);
+                        document.getElementById("places-loading").style.display = "none";
+                        // Hide places column on error
+                        document.getElementById("places-column").style.display = "none";
+                    });
+            }
         }
 
         // Function to generate star rating HTML
@@ -253,62 +304,6 @@
             }
 
             return `<span class="star-rating">${stars}</span>`;
-        }
-
-        // Separate function to fetch places
-        function fetchPlaces(location) {
-            // Only proceed if location is not empty
-            if (!location || location.trim() === "") {
-                return;
-            }
-
-            // Show places column and loading indicator
-            document.getElementById("places-column").style.display = "block";
-            document.getElementById("places-loading").style.display = "block";
-            document.getElementById("places-box").innerHTML = "";
-
-            console.log("Fetching places for:", location);
-
-            // Fetch places
-            fetch(`/get_places?location=${encodeURIComponent(location)}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(places => {
-                    console.log("Places data received:", places);
-                    document.getElementById("places-loading").style.display = "none";
-
-                    if (places && places.length > 0) {
-                        let placesHtml = "";
-                        places.forEach((place, index) => {
-                            // Generate star rating
-                            const starRating = generateStarRating(place.rating);
-
-                            placesHtml += `
-                                <div class="place-item">
-                                    <p class="place-name">${index + 1}. ${place.name}</p>
-                                    <p>${starRating} (${place.rating || 'N/A'})</p>
-                                    ${place.reviews ? `<p>Reviews: ${place.reviews}</p>` : ''}
-                                    ${place.category ? `<p>Category: ${place.category}</p>` : ''}
-                                    ${place.address ? `<p>Address: ${place.address}</p>` : ''}
-                                </div>
-                            `;
-                        });
-                        document.getElementById("places-box").innerHTML = placesHtml;
-                    } else {
-                        // If no places found, hide the places column
-                        document.getElementById("places-column").style.display = "none";
-                    }
-                })
-                .catch(error => {
-                    console.error("Error fetching places:", error);
-                    document.getElementById("places-loading").style.display = "none";
-                    // Hide places column on error
-                    document.getElementById("places-column").style.display = "none";
-                });
         }
     </script>
 </body>
