@@ -75,9 +75,6 @@ def polarity_scores_for_songs(df):
     sia = SentimentIntensityAnalyzer() 
     df['sentiment'] = df['text'].apply(lambda song_lyrics: sia.polarity_scores(song_lyrics)['compound'])
 
-print("Spotify Dataset Sample:")
-print(spotify_df.head())
-
 print("Lyrics Dataset Sample:")
 print(lyric_df.head())
 
