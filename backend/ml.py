@@ -68,7 +68,7 @@ custom_stopwords = set([
 # Load datasets
 #spotify_df = pd.read_csv("mini_spotify_track_db.csv")
 #spotify_df = pd.read_json("spotify-tracks-dataset.json")
-lyric_df = pd.read_json("spotify_millsongdata_trunc_half.json")
+lyric_df = pd.read_json("shortened_spotify.json")
 #lyric_df = pd.read_csv("mini_spotify_db.csv")
 
 def polarity_scores_for_songs(df):
