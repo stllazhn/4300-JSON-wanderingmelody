@@ -27,7 +27,7 @@ except AttributeError:
 else:
     ssl._create_default_https_context = _create_unverified_https_context
     
-'''
+
 def safe_nltk_download(resource):
     try:
         find(resource)
@@ -46,7 +46,7 @@ def ensure_nltk_resources():
         safe_nltk_download(res)
         
 ensure_nltk_resources()
-'''
+
 
 # Define a stopwords list manually
 custom_stopwords = set([
