@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 # Import the scrape_google_places function
 from scrape_google_places import get_google_maps_recommendations
+import gc
 
 # ROOT_PATH for linking with all your files.
 os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..", os.curdir))
@@ -18,8 +19,8 @@ CORS(app)
 def home():
     return render_template('base.html', title="WanderingMelody")
 
-spotify_df = pd.read_json("spotify-tracks-dataset.json")
-lyric_df = pd.read_json("spotify_millsongdata.json")
+#spotify_df = pd.read_json("spotify-tracks-dataset.json")
+#lyric_df = pd.read_json("spotify_millsongdata.json")
 
 # Preprocess the lyric data and build necessary indices
 dict_of_lyrics = ml.lyric_df[['text']].to_dict(orient="index")
@@ -27,6 +28,12 @@ cleaned_tokenized_lyrics = ml.tokenize_lyrics(dict_of_lyrics, ml.tokenize)
 cleaned_tokenized_lyrics = ml.remove_stop_words(ml.custom_stopwords, cleaned_tokenized_lyrics)
 inverted_index = ml.build_inverted_index(cleaned_tokenized_lyrics)
 clean_song_count = ml.compute_idf(inverted_index, len(cleaned_tokenized_lyrics))
+
+# Remove the refences to the memory-consuming datastructures after
+# after they are done being used
+del dict_of_lyrics, cleaned_tokenized_lyrics, inverted_index
+# Manually call the garbage collector to clean up memory (just in case)
+gc.collect()
 
 @app.route("/recommendations")
 def recommendations():
