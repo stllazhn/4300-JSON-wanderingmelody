@@ -329,7 +329,7 @@ def find_song_matches_with_svd_return_indexes(user_input, tfidf_vectorizer, svd,
     return [(idx, similarities[idx]) for idx in pos_similarity_idx]
 
 
-def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics, clean_song_count, user_age_input):
+def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics, clean_song_count, user_age_input, weather = None):
     print("using SVD")
     #This is a dict: {0: user input as token words}
     clean_user_description_input = remove_stop_words(custom_stopwords, {0: tokenize(user_description_input)})
@@ -430,6 +430,20 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics, clean_
             new_score -= antonym_score * 0.1
             
         song_list_sim_word_count_antonym_scores.append((song_idx, new_score))
+
+    # Weather sentiment adjustment
+    print("adjusting for weather sentiment if provided")
+    if weather:
+        sia = SentimentIntensityAnalyzer()
+        weather_sentiment = sia.polarity_scores(weather)['compound']
+        adjusted_with_weather = []
+        for song_idx, score in song_list_sim_word_count_antonym_scores:
+            lyrics = " ".join(cleaned_tokenized_lyrics[song_idx])
+            song_sentiment = sia.polarity_scores(lyrics)['compound']
+            sentiment_diff = abs(weather_sentiment - song_sentiment)
+            adjusted_score = score + (1 - sentiment_diff) * 0.15  # boost for alignment
+            adjusted_with_weather.append((song_idx, adjusted_score))
+        song_list_sim_word_count_antonym_scores = adjusted_with_weather
 
     print("sort")
     song_list_sim_word_count_antonym_scores = sorted(song_list_sim_word_count_antonym_scores, key=lambda x: -x[1])
