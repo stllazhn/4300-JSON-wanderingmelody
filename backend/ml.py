@@ -3,13 +3,12 @@ import os
 import re
 import pandas as pd
 from typing import List, Callable
-from collections import Counter
+from collections import Counter, defaultdict
 import nltk
 import math
 import ssl
 from nltk.corpus import wordnet
 from nltk.sentiment import SentimentIntensityAnalyzer
-from collections import Counter
 from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import TruncatedSVD
