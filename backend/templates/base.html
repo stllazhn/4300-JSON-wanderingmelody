@@ -332,7 +332,7 @@
                     console.error("Fetch error:", error);
                     loadingMessageSongs.style.display = "none";
                     loadingMessageLocations.style.display = "none";
-                    alert("Error fetching recommendations. Please try again.");
+                    answerBox.innerHTML = "<p>No songs found matching your mood.</p>";
                 });
         }
     </script>
