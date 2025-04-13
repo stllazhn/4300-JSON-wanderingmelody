@@ -32,12 +32,11 @@ def recommendations():
     mood = request.args.get("mood")
     location = request.args.get("location")
     age = request.args.get("age", default=18, type=int)
-    genre = request.args.get("genre")
     weather = request.args.get("weather")  
 
     # Validate inputs (at least mood or genre should be provided)
     if not mood:
-        return jsonify({"error": "Please provide at least a mood description or a genre."}), 400
+        return jsonify({"error": "Please provide a mood description"}), 400
 
     # map weather to mood descriptor
     weather_mood_map = {
