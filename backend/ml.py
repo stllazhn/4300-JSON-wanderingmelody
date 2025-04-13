@@ -40,7 +40,8 @@ def ensure_nltk_resources():
         'stopwords',
         'punkt',
         'wordnet',
-        'omw-1.4'  
+        'omw-1.4' ,
+        'vader_lexicon'
     ]
     for res in required_resources:
         safe_nltk_download(res)
