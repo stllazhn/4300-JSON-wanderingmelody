@@ -7,73 +7,6 @@
     href="https://fonts.googleapis.com/css2?family=Pacifico&family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
     rel="stylesheet">
 
-<style>
-    /* Styles for the side-by-side layout */
-    .results-container {
-        display: flex;
-        flex-direction: row;
-        gap: 20px;
-        margin-top: 20px;
-    }
-
-    /* On smaller screens, stack vertically */
-    @media (max-width: 768px) {
-        .results-container {
-            flex-direction: column;
-        }
-    }
-
-    .song-results-column,
-    .places-column {
-        flex: 1;
-    }
-
-    /* Places section styling with orange border */
-    #places-section {
-        background-color: transparent;
-        padding: 15px;
-        border-radius: 15px;
-        border: 2px solid #FF9800;
-        /* Orange border */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        /* Removed height: 100% to let it size naturally */
-    }
-
-    /* Places section title */
-    #places-section h3 {
-        font-family: 'Pacifico', cursive;
-        color: #FF9800;
-        /* Match the border color */
-        margin-top: 0;
-        margin-bottom: 15px;
-        text-align: center;
-    }
-
-    /* Individual place items */
-    .place-item {
-        background-color: white;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    /* Place name */
-    .place-name {
-        font-weight: bold;
-        margin-bottom: 5px;
-        color: #333;
-    }
-
-    /* Star ratings */
-    .star-rating {
-        color: #FF9800;
-        /* Orange stars */
-        letter-spacing: 2px;
-        font-size: 18px;
-    }
-</style>
-
 <body>
     <div class="full-body-container">
         <div class="top-text">
@@ -87,7 +20,7 @@
 
             <!-- Location input -->
             <div class="input-box">
-                <input type="text" placeholder="Search Location (Optional)" id="location">
+                <input type="text" placeholder="Enter Country" id="location">
             </div>
 
             <!-- Age input -->
@@ -118,140 +51,54 @@
             <button onclick="searchRecommendations()">Search</button>
         </div>
 
-        <!-- Container for side-by-side layout -->
-        <div class="results-container">
-            <!-- Song results column -->
-            <div class="song-results-column">
-                <div id="answer-box"></div>
-                <div id="loading-message" style="display:none;">Loading recommendations...</div>
-            </div>
-
-            <!-- Places column -->
-            <div class="places-column" id="places-column" style="display:none;">
-                <div id="places-section">
-                    <h3>Places to Visit!</h3>
-                    <div id="places-box"></div>
-                    <div id="places-loading" style="display:none; text-align: center; padding: 10px;">
-                        Searching for the most popular places to visit:
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div id="answer-box"></div>
+        <div id="loading-message" style="display:none;">Loading recommendations...</div>
     </div>
 
     <script>
         function searchRecommendations() {
             console.log("Function searchRecommendations() was called!");
             const mood = document.getElementById("mood").value;
-            const location = document.getElementById("location").value.trim();
+            const location = document.getElementById("location").value;
             const age = document.getElementById("age").value;
             const genre = document.getElementById("genre").value;
             const weather = document.getElementById("weather").value;
 
             console.log("Search initiated with parameters:", { mood, location, age, genre, weather });
 
-            // Reset the UI
             const answerBox = document.getElementById("answer-box");
             answerBox.innerHTML = "";
 
             const loadingMessage = document.getElementById("loading-message");
             loadingMessage.style.display = "block";
 
-            // Hide places column initially
-            const placesColumn = document.getElementById("places-column");
-            placesColumn.style.display = "none";
-
-            // Hide places results and show loading indicator if location is provided
-            if (location && location.trim() !== "") {
-                placesColumn.style.display = "block";
-                document.getElementById("places-box").innerHTML = "";
-                document.getElementById("places-loading").style.display = "block";
-            }
-
             if (!mood && !genre) {
                 alert("Please provide at least a mood description or a genre.");
                 loadingMessage.style.display = "none";
-                document.getElementById("places-loading").style.display = "none";
                 console.log("Input validation failed: Both mood and genre are missing.");
                 return;
             }
 
-            // Create promises for both calls to run concurrently
-            const promises = [];
-
-            // Places recommendations promise (only if location is provided)
-            let placesPromise = Promise.resolve([]);
-            if (location && location.trim() !== "") {
-                placesPromise = fetch(`/get_places?location=${encodeURIComponent(location)}`)
-                    .then(response => {
-                        console.log("Places response received:", response);
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-                        return response.json();
-                    });
-                promises.push(placesPromise);
-            }
-
-            // Music recommendations promise
-            const songsPromise = fetch("/recommendations?" + new URLSearchParams({
+            const requestUrl = "/recommendations?" + new URLSearchParams({
                 mood: mood,
                 location: location,
                 age: age,
                 genre: genre,
-                weather: weather
-            }).toString())
+                weather: weather  // ✅ included
+            }).toString();
+
+            console.log("Fetching recommendations from:", requestUrl);
+
+            fetch(requestUrl)
                 .then(response => {
-                    console.log("Songs response received:", response);
+                    console.log("Response received:", response);
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
                     return response.json();
-                });
-
-            promises.push(songsPromise);
-
-            // Process places results
-            if (location && location.trim() !== "") {
-                placesPromise
-                    .then(places => {
-                        console.log("Places data received:", places);
-                        document.getElementById("places-loading").style.display = "none";
-
-                        if (places && places.length > 0) {
-                            let placesHtml = "";
-                            places.forEach((place, index) => {
-                                // Generate star rating
-                                const starRating = generateStarRating(place.rating);
-
-                                placesHtml += `
-                                    <div class="place-item">
-                                        <p class="place-name">${index + 1}. ${place.name}</p>
-                                        <p>${starRating} (${place.rating || 'N/A'})</p>
-                                        ${place.reviews ? `<p>Reviews: ${place.reviews}</p>` : ''}
-                                        ${place.category ? `<p>Category: ${place.category}</p>` : ''}
-                                        ${place.address ? `<p>Address: ${place.address}</p>` : ''}
-                                    </div>
-                                `;
-                            });
-                            document.getElementById("places-box").innerHTML = placesHtml;
-                        } else {
-                            // If no places found, hide the places column
-                            document.getElementById("places-column").style.display = "none";
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error fetching places:", error);
-                        document.getElementById("places-loading").style.display = "none";
-                        // Hide places column on error
-                        document.getElementById("places-column").style.display = "none";
-                    });
-            }
-
-            // Process song results
-            songsPromise
+                })
                 .then(data => {
-                    console.log("Parsed song data:", data);
+                    console.log("Parsed response data:", data);
                     loadingMessage.style.display = "none";
 
                     if (data && data.length > 0) {
@@ -259,13 +106,13 @@
                             let songDiv = document.createElement("div");
                             songDiv.classList.add("song-box");
                             songDiv.innerHTML = `
-                                <div class="song-details">
-                                    <h3 class="song-title">${song.title}</h3>
-                                    <p class="song-artist">by ${song.artist}</p>
-                                    <p class="song-album">Album: ${song.album} | Genre: ${song.genre}</p>
-                                    <p class="song-rating">Rating: ${song.rating || 'Not available'}</p>
-                                </div>
-                            `;
+                                    <div class="song-details">
+                                        <h3 class="song-title">${song.title}</h3>
+                                        <p class="song-artist">by ${song.artist}</p>
+                                        <p class="song-album">Album: ${song.album} | Genre: ${song.genre}</p>
+                                        <p class="song-rating">Rating: ${song.rating || 'Not available'}</p>
+                                    </div>
+                                `;
                             answerBox.appendChild(songDiv);
                         });
                     } else {
@@ -274,31 +121,10 @@
                     }
                 })
                 .catch(error => {
-                    console.error("Fetch error for songs:", error);
+                    console.error("Fetch error:", error);
                     loadingMessage.style.display = "none";
-                    answerBox.innerHTML = "<p>Error fetching song recommendations. Please try again.</p>";
+                    alert("Error fetching recommendations. Please try again.");
                 });
         }
-
-        // Function to generate star rating HTML
-        function generateStarRating(rating) {
-            if (rating == null) return '<span class="star-rating">☆☆☆☆☆</span>';
-
-            const roundedRating = rating % 1 >= 0.5 ? Math.ceil(rating) : Math.floor(rating);
-            let stars = '';
-
-            // Add full stars
-            for (let i = 0; i < roundedRating; i++) {
-                stars += '★';
-            }
-
-            // Add empty stars
-            for (let i = 0; i < 5 - roundedRating; i++) {
-                stars += '☆';
-            }
-
-            return `<span class="star-rating">${stars}</span>`;
-        }
-
     </script>
 </body>
