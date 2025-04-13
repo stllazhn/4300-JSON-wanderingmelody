@@ -17,7 +17,7 @@ def home():
     return render_template('base.html', title="WanderingMelody")
 
 #spotify_df = pd.read_json("spotify-tracks-dataset.json")
-lyric_df = pd.read_json("shortened_spotify.json")
+lyric_df = pd.read_json("datasets/shortened_spotify.json")
 
 # Preprocess the lyric data and build necessary indices
 dict_of_lyrics = ml.lyric_df[['text']].to_dict(orient="index")

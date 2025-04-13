@@ -67,10 +67,7 @@ custom_stopwords = set([
 ])
 
 # Load datasets
-#spotify_df = pd.read_csv("mini_spotify_track_db.csv")
-#spotify_df = pd.read_json("spotify-tracks-dataset.json")
-lyric_df = pd.read_json("shortened_spotify.json")
-#lyric_df = pd.read_csv("mini_spotify_db.csv")
+lyric_df = pd.read_json("datasets/shortened_spotify.json")
 
 # Tokenization function
 def tokenize(text: str) -> List[str]:
