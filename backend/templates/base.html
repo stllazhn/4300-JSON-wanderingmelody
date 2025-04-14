@@ -188,7 +188,7 @@
 
         // Fetch the country data when the page loads
         window.addEventListener('DOMContentLoaded', (event) => {
-            fetch('/static/ten_countries_reviews.json')
+            fetch('/static/countries_reviews.json')
                 .then(response => response.json())
                 .then(data => {
                     // Transform the data into a more usable format
