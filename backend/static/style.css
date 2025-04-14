@@ -175,9 +175,9 @@
 
 button {
     margin-top: 20px;
-    padding: 10px 20px;
+    padding: 14px 20px;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 16px;
     color: #121212;
     background-color: #1DB954;
     border: none;
@@ -189,6 +189,69 @@ button {
 button:hover {
     background-color: #1ed760;
 }
+
+.dropdown-button {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+    font-weight: bold;
+    font-size: 16px;
+    color: #121212;
+    background-color: #1DB954;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: left;
+}
+
+.dropdown-button:hover {
+    background-color: #1ed760;
+}
+
+.dropdown-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    margin: auto;
+    width: 100%;
+}
+
+.dropdown {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.dropdown-content {
+    width: 100%;
+    background-color: #2a2a2a;
+    padding: 15px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: none;
+    color: white;
+}
+
+.dropdown-button i {
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+}
+
+.dropdown input[type="checkbox"]:checked+label+.dropdown-content {
+    display: block;
+}
+
+.dropdown input[type="checkbox"]:checked+label i {
+    transform: rotate(180deg);
+}
+
+.dropdown input[type="checkbox"] {
+    display: none;
+}
+
 
 #loading-message {
     margin-top: 20px;
@@ -210,73 +273,42 @@ body {
     background-color: #121212;
     font-family: 'Open Sans', sans-serif;
     color: white;
+    line-height: 1.8;
+}
+
+ul {
+    margin: 20px 0;
+    padding-left: 30px;
+    list-style-type: disc;
+}
+
+ul li {
+    margin-bottom: 12px;
+    line-height: 1.6;
+    font-size: 1rem;
+    color: #e0e0e0;
+}
+
+ol {
+    margin: 20px 0;
+    padding-left: 30px;
+    list-style-type: decimal;
+}
+
+ol li {
+    margin-bottom: 12px;
+    line-height: 1.8;
+    font-size: 1rem;
+    color: #e0e0e0;
+}
+
+p {
+    line-height: 1.5;
+    margin-bottom: 1.2em;
 }
 
 .location-item {
     color: #e0e0e0;
-
-}
-
-.dropdown-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 20px;
-    max-width: 500px;
-    margin: auto;
-}
-
-.dropdown {
-    width: 100%;
-    border: 1px solid #333;
-    border-radius: 8px;
-}
-
-.dropdown-button {
-    width: 100%;
-    padding: 15px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: left;
-    background-color: #1DB954;
-    color: #121212;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.3s ease;
-}
-
-.dropdown-button:hover {
-    background-color: #1ed760;
-}
-
-.dropdown-button i {
-    margin-left: 10px;
-    transition: transform 0.3s ease;
-}
-
-.dropdown-content {
-    margin-top: 10px;
-    background-color: #2a2a2a;
-    padding: 15px;
-    border-radius: 8px;
-    display: none;
-    color: white;
-}
-
-.dropdown input[type="checkbox"]:checked+label+.dropdown-content {
-    display: block;
-}
-
-.dropdown input[type="checkbox"]:checked+label i {
-    transform: rotate(180deg);
-}
-
-.dropdown input[type="checkbox"] {
-    display: none;
 }
 
 .results-container {
@@ -382,4 +414,10 @@ body {
     width: fit-content;
     margin-left: auto;
     margin-right: auto;
+}
+
+details[open] {
+    background-color: #333;
+    color: white;
+    border: 2px solid #1DB954;
 }
