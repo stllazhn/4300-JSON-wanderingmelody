@@ -60,6 +60,11 @@ def recommendations():
         return jsonify([])  
     
     song_details = ml.get_song_details_with_ratings(recommended_songs_with_scores)
+    for song in song_details:
+        for key, value in song.items():
+            if isinstance(value, (np.integer, np.floating)):
+                song[key] = value.item()  # Convert numpy type to native Python type
+
     return jsonify(song_details)
 
 if __name__ == "__main__":

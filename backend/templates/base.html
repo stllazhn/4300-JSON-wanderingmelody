@@ -6,112 +6,6 @@
 <link
     href="https://fonts.googleapis.com/css2?family=Pacifico&family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
     rel="stylesheet">
-<style>
-    .results-container {
-        display: flex;
-        gap: 30px;
-        margin: 20px 40px 0;
-    }
-
-    .song-recommendations-box {
-        flex: 3;
-        position: relative;
-    }
-
-    .location-info-box {
-        flex: 2;
-        background-color: rgba(255, 255, 255, 0.8);
-        border: 2px solid #FFA500;
-        border-radius: 15px;
-        padding: 20px;
-        backdrop-filter: blur(5px);
-        height: fit-content;
-        min-width: 300px;
-        max-width: 350px;
-    }
-
-    .location-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-
-    .location-item {
-        margin-bottom: 20px;
-        padding-bottom: 20px;
-        border-bottom: 1px dashed #FFA500;
-    }
-
-    .location-item:last-child {
-        border-bottom: none;
-        margin-bottom: 0;
-        padding-bottom: 0;
-    }
-
-    .location-name {
-        font-weight: bold;
-        color: #FFA500;
-        font-size: 1.1em;
-        margin-bottom: 8px;
-    }
-
-    .location-rating {
-        display: inline-block;
-        background-color: #FFA500;
-        color: white;
-        padding: 3px 10px;
-        border-radius: 10px;
-        font-size: 0.9em;
-        margin-right: 10px;
-    }
-
-    .location-reviews {
-        font-size: 0.9em;
-        color: #666;
-        margin: 8px 0;
-    }
-
-    .location-review {
-        background-color: rgba(255, 165, 0, 0.1);
-        padding: 12px;
-        border-radius: 8px;
-        margin-top: 8px;
-        font-size: 0.9em;
-        line-height: 1.5;
-    }
-
-    .country-title {
-        color: #FFA500;
-        font-size: 1.3em;
-        font-weight: bold;
-        margin: 0;
-    }
-
-    #loading-message-locations {
-        display: none;
-        background-color: rgba(255, 165, 0, 0.2);
-        padding: 8px 15px;
-        border-radius: 20px;
-        font-size: 0.9em;
-        color: #FFA500;
-        margin-left: 10px;
-    }
-
-    #loading-message-songs {
-        display: none;
-        background-color: rgba(255, 165, 0, 0.2);
-        padding: 10px 20px;
-        border-radius: 20px;
-        font-size: 1em;
-        color: #FFA500;
-        text-align: center;
-        margin-bottom: 20px;
-        width: fit-content;
-        margin-left: auto;
-        margin-right: auto;
-    }
-</style>
 
 <body>
     <div class="full-body-container">
@@ -149,7 +43,6 @@
                     <option value="United Kingdom">United Kingdom</option>
                     <option value="United States">United States</option>
                     <option value="Vietnam">Vietnam</option>
-
                 </select>
             </div>
 
@@ -174,6 +67,42 @@
             </div>
 
             <button onclick="searchRecommendations()">Search</button>
+        </div>
+
+        <!-- Font Awesome for the dropdown icon -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+        <div class="dropdown-container">
+            <!-- Recommendation Logic Dropdown -->
+            <div class="dropdown">
+                <input type="checkbox" id="dropdown1">
+                <label for="dropdown1" class="dropdown-button">
+                    Recommendation Logic <i class="fas fa-chevron-down"></i>
+                </label>
+                <div class="dropdown-content">
+                    <p>We use SVD as a text mining tool to pull out deeper themes from both user input and song lyrics.
+                        That gives us a solid starting point for matching based on vibe and meaning, not just keywords.
+                    </p>
+                    <p>This multi-layered scoring helps surface songs that are thematically relevant, emotionally
+                        resonant, and contextually appropriate. The end result? A smarter, more personalized set of
+                        recommendations that actually fit the moment.</p>
+                </div>
+            </div>
+
+            <!-- Location Data Dropdown -->
+            <div class="dropdown">
+                <input type="checkbox" id="dropdown2">
+                <label for="dropdown2" class="dropdown-button">
+                    Location Vibes <i class="fas fa-chevron-down"></i>
+                </label>
+                <div class="dropdown-content">
+                    <p>We scraped location data from Google Maps and pulled the top 5 places for each destination, along
+                        with the top 3 reviews for every spot. The goal is to help you get a feel for the local vibe —
+                        not just through songs, but through the actual experiences people have had there.</p>
+                    <p>Stay tuned for our next update — we’re working on new ways to help you explore even deeper. 🌍✨
+                    </p>
+                </div>
+            </div>
         </div>
 
         <div class="results-container">
@@ -325,11 +254,17 @@
                             let songDiv = document.createElement("div");
                             songDiv.classList.add("song-box");
                             songDiv.innerHTML = `
-                                    <div class="song-details">
-                                        <h3 class="song-title">${song.title}</h3>
-                                        <p class="song-artist">by ${song.artist}</p>
-                                        <p class="song-album">Album: ${song.album}</p>
-                                        <p class="song-rating">Rating: ${song.rating || 'Not available'}</p>
+                                    <div class="song-container">
+                                        <div class="song-image">
+                                            <img src="${song.image_url}" alt="${song.title} album cover" class="album-cover">
+                                        </div>
+                                        <div class="song-details">
+                                            <h3 class="song-title">${song.title}</h3>
+                                            <p class="song-artist">by ${song.artist}</p>
+                                            <p class="song-rating">Rating: ${song.rating ? song.rating.toFixed(2) : 'Not available'}</p>
+                                            <p class="song-popularity">Popularity Score: ${song.popularity}</p>
+                                            <a href="${song.song_url}" target="_blank" class="play-button">Play on Spotify</a>
+                                        </div>
                                     </div>
                                 `;
                             answerBox.appendChild(songDiv);

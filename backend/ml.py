@@ -261,8 +261,9 @@ def get_song_details(song_ids):
             details = {
                 "title": song_row["song"].values[0],
                 "artist": song_row["artist"].values[0]
-                #"album": song_row["album_name"].values[0],
-                #"genre": song_row["track_genre"].values[0]
+                # "image_url": song_row["image_url"].values[0],
+                # "popularity": song_row["popularity"].values[0],
+                # "song_url": song_row["song_url"].values[0]
             }
             song_details.append(details)
     return song_details
@@ -276,9 +277,10 @@ def get_song_details_with_ratings(song_tuple_list):
             details = {
                 "title": song_row["song"].values[0],
                 "artist": song_row["artist"].values[0],
-                #"album": song_row["album_name"].values[0],
-                #"genre": song_row["track_genre"].values[0],
-                "rating": song_rating
+                "rating": song_rating,
+                "image_url": song_row["image_url"].values[0],
+                "popularity": song_row["popularity"].values[0],
+                "song_url": song_row["song_url"].values[0]
             }
             song_details.append(details)
     return song_details
