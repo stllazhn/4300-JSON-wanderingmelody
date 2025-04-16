@@ -5,12 +5,16 @@ from flask_cors import CORS
 import ml  
 import numpy as np
 import pandas as pd
+from helpers.location_review_similarity import find_similar_locations, load_reviews_database
 
 # ROOT_PATH for linking with all your files.
 os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..", os.curdir))
 
 app = Flask(__name__)
 CORS(app)
+
+# Load the reviews database once at startup
+REVIEWS_DATABASE = load_reviews_database()
 
 @app.route("/")
 def home():
@@ -66,6 +70,59 @@ def recommendations():
                 song[key] = value.item()  # Convert numpy type to native Python type
 
     return jsonify(song_details)
+
+@app.route("/similar_locations")
+def similar_locations():
+    """
+    API endpoint to get similar locations based on mood and country
+    """
+    country = request.args.get("country", "")
+    mood = request.args.get("mood", "")
+    
+    print(f"Received request for similar locations - Country: {country}, Mood: {mood}")
+    
+    if not country or not mood:
+        return jsonify([])
+    
+    # Get the top 3 similar locations
+    try:
+        similar_locs = find_similar_locations(country, mood)
+        print(f"Found similar locations: {similar_locs}")
+        
+        # Find the country data in the reviews database
+        country_data = None
+        for data in REVIEWS_DATABASE:
+            if data["country"].lower() == country.lower():
+                country_data = data
+                break
+        
+        if not country_data:
+            return jsonify({"error": f"Country data not found for {country}"}), 404
+        
+        # Format the response with full location data
+        locations = []
+        for i, (location_name, similarity) in enumerate(similar_locs):
+            if location_name != "No locations found" and location_name != "No location found":
+                # Find the index of this location in the country data
+                location_index = None
+                for j in range(1, 6):
+                    if country_data[f"location_{j}"] == location_name:
+                        location_index = j
+                        break
+                
+                if location_index:
+                    locations.append({
+                        "name": location_name,
+                        "rating": country_data[f"rating_{location_index}"],
+                        "num_reviews": country_data[f"num_reviews_{location_index}"],
+                        "top_review": country_data[f"top_review_{location_index}"],
+                        "similarity": similarity
+                    })
+        
+        return jsonify(locations)
+    except Exception as e:
+        print(f"Error finding similar locations: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)

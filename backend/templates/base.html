@@ -87,12 +87,12 @@
                             user descriptions and song lyrics. SVD is a dimensionality reduction technique that breaks
                             down a large matrix (like a
                             bag-of-words model of lyrics) into a smaller set of <em>latent features</em>—abstract
-                            "topics" that capture patterns in word usage. When a user describes what they’re feeling or
+                            "topics" that capture patterns in word usage. When a user describes what they're feeling or
                             looking for, their input is vectorized and
                             projected into this reduced space. Then, we measure how close this projected vector is to
                             each song's topic vector. This gives us a <strong>topic match score</strong>, which reflects
                             the <em>thematic
-                                similarity</em> between the user’s input and each song.</p>
+                                similarity</em> between the user's input and each song.</p>
                     </details>
 
                     <details>
@@ -103,7 +103,7 @@
                             <li><strong>Topic Match Score (via SVD)</strong><br>
                                 Measures how closely a song aligns with the user's input in terms of deeper themes.</li>
                             <li><strong>Word Match Score</strong><br>
-                                Counts how many meaningful words from the user input appear in a song’s lyrics, using a
+                                Counts how many meaningful words from the user input appear in a song's lyrics, using a
                                 lemmatized, stopword-filtered comparison.</li>
                             <li><strong>Sentiment Match (Age + Weather-based)</strong><br>
                                 Adjusts results based on how emotionally "bright" or "dark" the lyrics are, calibrated
@@ -131,10 +131,10 @@
                     </h4>Location Vibes </h4><i class="fas fa-chevron-down"></i>
                 </label>
                 <div class="dropdown-content">
-                    <p>We gathered location data from Google Maps, highlighting the top 5 places and the 3 best reviews
-                        for each destination. This gives you a feel for the local vibe, not just through music, but also
-                        through real-life experiences. Stay tuned for updates as we continue to enhance your
-                        exploration. 🌍✨</p>
+                    <p>We gathered location data from Google Maps, highlighting the top 3 places in a desired country
+                        based on the similarity between the reviews and the user input. This gives you a feel for the
+                        local vibe, not just through music, but also through real-life experiences. Stay tuned for
+                        updates as we continue to enhance your exploration. 🌍✨</p>
                 </div>
             </div>
         </div>
@@ -157,34 +157,6 @@
     </div>
 
     <script>
-        // This will hold our country data
-        let countryData = {};
-
-        // Fetch the country data when the page loads
-        window.addEventListener('DOMContentLoaded', (event) => {
-            fetch('/static/countries_reviews.json')
-                .then(response => response.json())
-                .then(data => {
-                    // Transform the data into a more usable format
-                    countryData = data.reduce((acc, country) => {
-                        const locations = [];
-                        for (let i = 1; i <= 5; i++) {
-                            locations.push({
-                                name: country[`location_${i}`],
-                                rating: country[`rating_${i}`],
-                                num_reviews: country[`num_reviews_${i}`],
-                                top_review: country[`top_review_${i}`]
-                            });
-                        }
-                        acc[country.country] = { locations };
-                        return acc;
-                    }, {});
-                })
-                .catch(error => {
-                    console.error('Error loading country data:', error);
-                });
-        });
-
         function searchRecommendations() {
             console.log("Function searchRecommendations() was called!");
             const mood = document.getElementById("mood").value;
@@ -198,10 +170,7 @@
             answerBox.innerHTML = "";
 
             const loadingMessageSongs = document.getElementById("loading-message-songs");
-            const loadingMessageLocations = document.getElementById("loading-message-locations");
-
             loadingMessageSongs.style.display = "none";
-            loadingMessageLocations.style.display = "none";
             loadingMessageSongs.textContent = "Loading song recommendations...";
 
             if (!mood) {
@@ -213,52 +182,95 @@
             // Display location info if country is selected
             const locationInfoBox = document.getElementById("location-info");
 
-            if (country && countryData[country]) {
-                const countryInfo = countryData[country];
-                let locationHTML = `
+            if (country) {
+                locationInfoBox.innerHTML = `
                     <div class="location-header">
                         <div class="country-title">Top Locations in ${country}</div>
                         <div id="loading-message-locations">Loading locations...</div>
                     </div>
-                `;
-
-                countryInfo.locations.forEach(location => {
-                    locationHTML += `
-                        <div class="location-item">
-                            <div class="location-name">${location.name}</div>
-                            <div>
-                                <span class="location-rating">★ ${location.rating}</span>
-                                <span class="location-reviews">${location.num_reviews} reviews</span>
-                            </div>
-                            <div class="location-review">"${location.top_review}"</div>
-                        </div>
-                    `;
-                });
-
-                locationInfoBox.innerHTML = locationHTML;
-                loadingMessageLocations.style.display = "block";
-            } else if (country) {
-                locationInfoBox.innerHTML = `
-                    <div class="location-header">
-                        <div class="country-title">No data available</div>
-                        <div id="loading-message-locations">Loading locations...</div>
+                    <div style="color: #666; font-style: italic;">
+                        Finding locations that match your mood...
                     </div>
-                    <div style="color: #666;">No location information found for ${country}</div>
                 `;
+
+                const loadingMessageLocations = document.getElementById("loading-message-locations");
                 loadingMessageLocations.style.display = "block";
+
+                // Fetch similar locations based on mood and country
+                console.log(`Fetching similar locations for country: ${country}, mood: ${mood}`);
+
+                fetch(`/similar_locations?country=${encodeURIComponent(country)}&mood=${encodeURIComponent(mood)}`)
+                    .then(response => {
+                        console.log("Location response received:", response);
+                        if (!response.ok) {
+                            return response.json().then(data => {
+                                throw new Error(data.error || `HTTP error! Status: ${response.status}`);
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(locations => {
+                        console.log("Parsed location data:", locations);
+                        loadingMessageLocations.style.display = "none";
+
+                        if (locations && locations.length > 0) {
+                            let locationHTML = `
+                                <div class="location-header">
+                                    <div class="country-title">Top Locations in ${country}</div>
+                                </div>
+                            `;
+
+                            // Display each location with the original styling
+                            locations.forEach(location => {
+                                locationHTML += `
+                                    <div class="location-item">
+                                        <div class="location-name">${location.name}</div>
+                                        <div>
+                                            <span class="location-rating">★ ${location.rating}</span>
+                                            <span class="location-reviews">${location.num_reviews} reviews</span>
+                                            <span class="similarity-score">(${(location.similarity * 100).toFixed(1)}% match)</span>
+                                        </div>
+                                        <div class="location-review">"${location.top_review}"</div>
+                                    </div>
+                                `;
+                            });
+
+                            locationInfoBox.innerHTML = locationHTML;
+                        } else {
+                            locationInfoBox.innerHTML = `
+                                <div class="location-header">
+                                    <div class="country-title">No locations found</div>
+                                </div>
+                                <div style="color: #666; font-style: italic;">
+                                    No locations found that match your mood in ${country}
+                                </div>
+                            `;
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Location fetch error:", error);
+                        loadingMessageLocations.style.display = "none";
+                        locationInfoBox.innerHTML = `
+                            <div class="location-header">
+                                <div class="country-title">Error</div>
+                            </div>
+                            <div style="color: #666; font-style: italic;">
+                                Error loading location data: ${error.message}
+                            </div>
+                        `;
+                    });
             } else {
                 locationInfoBox.innerHTML = `
                     <div class="location-header">
                         <div class="country-title">No country selected</div>
-                        <div id="loading-message-locations">Loading locations...</div>
                     </div>
                     <div style="color: #666; font-style: italic;">
                         Select a country to see popular locations
                     </div>
                 `;
-                loadingMessageLocations.style.display = "none";
             }
 
+            // Fetch song recommendations
             loadingMessageSongs.style.display = "block";
 
             const requestUrl = "/recommendations?" + new URLSearchParams({
@@ -272,16 +284,15 @@
 
             fetch(requestUrl)
                 .then(response => {
-                    console.log("Response received:", response);
+                    console.log("Song response received:", response);
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
                     return response.json();
                 })
                 .then(data => {
-                    console.log("Parsed response data:", data);
+                    console.log("Parsed song data:", data);
                     loadingMessageSongs.style.display = "none";
-                    loadingMessageLocations.style.display = "none";
 
                     if (data && data.length > 0) {
                         data.forEach(song => {
@@ -309,10 +320,9 @@
                     }
                 })
                 .catch(error => {
-                    console.error("Fetch error:", error);
+                    console.error("Song fetch error:", error);
                     loadingMessageSongs.style.display = "none";
-                    loadingMessageLocations.style.display = "none";
-                    answerBox.innerHTML = "<p>No songs found matching your mood.</p>";
+                    answerBox.innerHTML = "<p>Error loading songs: " + error.message + "</p>";
                 });
         }
     </script>
