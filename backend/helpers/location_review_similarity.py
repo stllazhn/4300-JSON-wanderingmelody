@@ -1,11 +1,17 @@
 import re
 import json
 import numpy as np
+import os
 from typing import List, Tuple
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import CountVectorizer
 
-def load_reviews_database(file_path='../datasets/countries_reviews.json'):
+def load_reviews_database(file_path=None):
+    if file_path is None:
+        # Get absolute path to the JSON file relative to this script
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(base_dir, '..', 'datasets', 'countries_reviews.json')
+    
     with open(file_path, 'r', encoding='utf-8') as file:
         reviews_database = json.load(file)
     return reviews_database
