@@ -329,7 +329,7 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics,
     ideal_sentiment = 1 - (user_age_input / 50)
     filtered_matches = [
         (idx, score) for idx, score in topic_matches 
-        if abs(lyric_df['sentiment'][idx] - ideal_sentiment) < 1
+        if abs(lyric_df['sentiment'][idx] - ideal_sentiment) < 0.5
     ]
     
     # 5. Build inverted index and find word matches
@@ -358,7 +358,7 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics,
     combined_scores = []
     for song_idx, topic_score in filtered_matches:
         word_score = word_match_scores.get(song_idx, 0)
-        combined_score = topic_score + word_score * 0.25
+        combined_score = topic_score + word_score * 0.2
         combined_scores.append((song_idx, combined_score))
     
     # 8. Handle antonyms
