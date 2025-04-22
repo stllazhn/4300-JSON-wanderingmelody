@@ -26,7 +26,7 @@ body {
 }
 
 /* Example Container */
-.full-body-container {
+/* .full-body-container {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -39,6 +39,15 @@ body {
     align-items: stretch;
     padding: 20px;
     overflow-y: auto;
+} */
+
+.full-body-container {
+    position: relative;   /* enable z-index */
+    z-index: 1;
+}
+
+body::before {
+    z-index: -3;
 }
 
 .content-wrapper {
@@ -207,7 +216,7 @@ input:checked + .slider:before {
 }
 
 .song-box:hover {
-    background-color: var(--card-bg);  /* adjust hover color if desired */
+    background-color: var(--card-bg); 
 }
 
 .song-container {
@@ -460,4 +469,106 @@ ul, ol {
 p {
     line-height: 1.5;
     margin-bottom: 1.2em;
+}
+
+/* Animated Background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(-45deg, #1DB954, #1ed760, #121212, #282828);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Fade In Animation for Content */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fancy Button Hover Glow */
+button:hover, .play-button:hover {
+    box-shadow: 0 0 15px var(--accent-color), 0 0 30px var(--accent-color);
+}
+
+/* Vanta background container */
+#vanta-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: -2;
+  }
+
+
+/* Title subtle float animation */
+#wandering-melody {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* Input box focus glow */
+.input-box input:focus, .input-box textarea:focus, .styled-input:focus {
+    outline: none;
+    border: 1px solid var(--accent-color);
+    box-shadow: 0 0 8px var(--accent-color);
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+/* Placeholder styling */
+.input-box textarea::placeholder, .input-box input::placeholder {
+    color: var(--secondary-text);
+    opacity: 0.8;
+    font-style: italic;
+}
+
+/* Button refinements */
+button, .dropdown-button {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Card hover lift */
+.song-box, .location-item {
+    transition: transform 0.3s, box-shadow 0.3s;
+    will-change: transform;
+}
+
+.song-box:hover, .location-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+/* Input icon styling */
+.input-box i {
+    margin-left: 15px;
+    font-size: 1.2em;
+    color: var(--accent-color);
+}
+
+/* Results spacing */
+.results-container {
+    padding-top: 40px;
 }
