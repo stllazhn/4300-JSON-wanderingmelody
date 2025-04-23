@@ -9,6 +9,7 @@
 
 <body>
     <div id="vanta-bg"></div>
+    <div id="note-area"></div> 
     <div class="full-body-container">
         <div class="top-text">
             <h1 id="wandering-melody">🎶 WanderingMelody</h1>
@@ -397,6 +398,25 @@
     window.addEventListener('beforeunload', () => {
     if (vantaEffect) vantaEffect.destroy();
     });
+    </script>
+
+
+<script>
+      (function() {
+        const noteArea = document.getElementById('note-area');
+        function createNote() {
+          const note = document.createElement('div');
+          note.className = 'note';
+          note.textContent = Math.random() < 0.5 ? '♪' : '♫';
+          const size = Math.random() * 20 + 16;  
+          note.style.fontSize = size + 'px';
+          note.style.left = (Math.random() * 100) + 'vw';
+          note.style.animationDuration = (Math.random() * 3 + 4) + 's';
+          noteArea.appendChild(note);
+          note.addEventListener('animationend', () => note.remove());
+        }
+        setInterval(createNote, 400);
+      })();
     </script>
 
 </body>
