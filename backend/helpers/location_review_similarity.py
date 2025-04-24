@@ -65,11 +65,14 @@ def find_similar_locations(country: str, mood: str) -> List[Tuple[str, float]]:
     
     # Extract all locations and reviews for this country
     locations_reviews = []
-    for i in range(1, 6):
+    i = 1
+    while True:
         location = country_data.get(f"location_{i}", "")
         review = country_data.get(f"top_review_{i}", "")
-        if location and review:
-            locations_reviews.append((location, review))
+        if not location or not review:
+            break  # Stop when we don't find any more locations
+        locations_reviews.append((location, review))
+        i += 1
     
     # Extract just the review texts for vectorization
     review_texts = [review for _, review in locations_reviews]

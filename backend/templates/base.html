@@ -9,7 +9,7 @@
 
 <body>
     <div id="vanta-bg"></div>
-    <div id="note-area"></div> 
+    <div id="note-area"></div>
     <div class="full-body-container">
         <div class="top-text">
             <h1 id="wandering-melody">🎶 WanderingMelody</h1>
@@ -17,12 +17,12 @@
 
             <div class="theme-toggle">
                 <label class="switch">
-                  <input type="checkbox" id="theme-toggle">
-                  <span class="slider"></span>
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
                 </label>
                 <span id="mode-label">Dark Mode</span>
-              </div>
-              
+            </div>
+
 
 
             <!-- Mood input -->
@@ -95,28 +95,43 @@
                 <div class="dropdown-content">
                     <details open>
                         <summary><strong>Ratings: 🧠 How We Score Songs</strong></summary>
-                        <p>Our recommendation system uses a <strong>multi-layered rating approach</strong> to rank songs:</p>
+                        <p>Our recommendation system uses a <strong>multi-layered rating approach</strong> to rank
+                            songs:</p>
                         <ul>
-                          <li><strong>Topic Match Score (via SVD)</strong><br>
-                            Measures how closely a song aligns with the user's input in terms of general topics.
-                            <p>We use <strong>Singular Value Decomposition (SVD)</strong>, a dimensionality reduction technique, to uncover deeper themes in both user descriptions and song lyrics. SVD breaks down a large matrix (like a bag-of-words model) into a smaller set of <em>latent features</em>—abstract "topics" that capture patterns in word usage. The user's input is vectorized and projected into this reduced space, and we then compute how close this vector is to each song’s topic vector. This gives us a <strong>topic match score</strong> that reflects the <em>thematic similarity</em> between the user’s input and each song.</p>
-                          </li>
-                          <li><strong>Word Match Score</strong><br>
-                            Counts how many meaningful words from the user input appear in a song’s lyrics, using lemmatization and stopword filtering.
-                          </li>
-                          <li><strong>Sentiment Match (Age + Weather-based)</strong><br>
-                            Adjusts the rating based on how emotionally “bright” or “dark” a song’s lyrics are, in relation to the user’s age and optionally, current weather sentiment. Songs are rated higher when their emotional tone aligns positively with these factors.
-                          </li>
-                          <li><strong>Antonym Penalty</strong><br>
-                            Lowers the rating if a song strongly features antonyms of the user's input words, helping to avoid emotional or thematic mismatches.
-                          </li>
+                            <li><strong>Topic Match Score (via SVD)</strong><br>
+                                Measures how closely a song aligns with the user's input in terms of general topics.
+                                <p>We use <strong>Singular Value Decomposition (SVD)</strong>, a dimensionality
+                                    reduction technique, to uncover deeper themes in both user descriptions and song
+                                    lyrics. SVD breaks down a large matrix (like a bag-of-words model) into a smaller
+                                    set of <em>latent features</em>—abstract "topics" that capture patterns in word
+                                    usage. The user's input is vectorized and projected into this reduced space, and we
+                                    then compute how close this vector is to each song’s topic vector. This gives us a
+                                    <strong>topic match score</strong> that reflects the <em>thematic similarity</em>
+                                    between the user’s input and each song.
+                                </p>
+                            </li>
+                            <li><strong>Word Match Score</strong><br>
+                                Counts how many meaningful words from the user input appear in a song’s lyrics, using
+                                lemmatization and stopword filtering.
+                            </li>
+                            <li><strong>Sentiment Match (Age + Weather-based)</strong><br>
+                                Adjusts the rating based on how emotionally “bright” or “dark” a song’s lyrics are, in
+                                relation to the user’s age and optionally, current weather sentiment. Songs are rated
+                                higher when their emotional tone aligns positively with these factors.
+                            </li>
+                            <li><strong>Antonym Penalty</strong><br>
+                                Lowers the rating if a song strongly features antonyms of the user's input words,
+                                helping to avoid emotional or thematic mismatches.
+                            </li>
                         </ul>
-                        <p>Each component contributes to a final <strong>combined score</strong>. Songs are ranked based on this overall score to ensure the best emotional and thematic fit.</p>
-                      </details>
+                        <p>Each component contributes to a final <strong>combined score</strong>. Songs are ranked based
+                            on this overall score to ensure the best emotional and thematic fit.</p>
+                    </details>
 
                     <details open>
                         <summary><strong>🌟 Popularity (Optional Info)></strong></summary>
-                        <p>Additional, every song has a <strong>popularity score</strong> from 0 to 100, based on recent streaming
+                        <p>Additional, every song has a <strong>popularity score</strong> from 0 to 100, based on recent
+                            streaming
                             activity. This metric does <em>not</em> significantly affect recommendations, but helps
                             highlight currently trending songs on the platform.</p>
                     </details>
@@ -131,11 +146,12 @@
                 </label>
                 <div class="dropdown-content">
                     <p>We gathered location data from Google Maps, highlighting the top 3 places in a desired country
-                        based on the similarity between the reviews and the user text input, and the similarity 
-                        is provided as a % match score. If there exist no matches(In other words, if the locations all have
-                        a matching score of 0.0%), we provide a default list of recommended locations. This gives you a feel for the
-                        local vibe, not just through music, but also through real-life experiences. Stay tuned for
-                        updates as we continue to enhance your exploration. 🌍✨</p>
+                        based on the cosine similarity between the reviews and the user text input, and the similarity
+                        is provided as a % match score. If there exist no matches (In other words, if the locations all
+                        have a similarity score of 0.0%), we provide a default list of recommended locations, and you
+                        can try tailoring your description more to locations to get higher similarities! This gives you
+                        a feel for the local vibe, not just through music, but also through real-life experiences. 🌍✨
+                    </p>
                 </div>
             </div>
         </div>
@@ -363,60 +379,60 @@
     <script>
         let vantaEffect = null;
         function initVanta(isLight) {
-        if (vantaEffect) vantaEffect.destroy();
-        vantaEffect = VANTA.NET({
-            el: "#vanta-bg",
-            color:      isLight ? 0x1DB954 : 0x1DB954,  // dot‑color
-            backgroundColor: isLight ? 0xFFFFFF : 0x121212,
-            maxDistance: 20.00,
-            spacing:     20.00,
-            scale:       1.00,
-            scaleMobile: 1.00
-        });
+            if (vantaEffect) vantaEffect.destroy();
+            vantaEffect = VANTA.NET({
+                el: "#vanta-bg",
+                color: isLight ? 0x1DB954 : 0x1DB954,  // dot‑color
+                backgroundColor: isLight ? 0xFFFFFF : 0x121212,
+                maxDistance: 20.00,
+                spacing: 20.00,
+                scale: 1.00,
+                scaleMobile: 1.00
+            });
         }
 
-    function setTheme(isLight) {
-    if (isLight) {
-        document.body.classList.add('light-mode');
-        label.textContent = '🌞 Light Mode';
-        localStorage.setItem('theme','light');
-    } else {
-        document.body.classList.remove('light-mode');
-        label.textContent = '🌙 Dark Mode';
-        localStorage.setItem('theme','dark');
-    }
-    initVanta(isLight);
-    }
-    toggle.addEventListener('change', function() {
-    setTheme(this.checked);
-    });
-    window.addEventListener('DOMContentLoaded', () => {
-    const isLight = localStorage.getItem('theme') === 'light';
-    toggle.checked = isLight;
-    setTheme(isLight);
-    });
-    window.addEventListener('beforeunload', () => {
-    if (vantaEffect) vantaEffect.destroy();
-    });
+        function setTheme(isLight) {
+            if (isLight) {
+                document.body.classList.add('light-mode');
+                label.textContent = '🌞 Light Mode';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.remove('light-mode');
+                label.textContent = '🌙 Dark Mode';
+                localStorage.setItem('theme', 'dark');
+            }
+            initVanta(isLight);
+        }
+        toggle.addEventListener('change', function () {
+            setTheme(this.checked);
+        });
+        window.addEventListener('DOMContentLoaded', () => {
+            const isLight = localStorage.getItem('theme') === 'light';
+            toggle.checked = isLight;
+            setTheme(isLight);
+        });
+        window.addEventListener('beforeunload', () => {
+            if (vantaEffect) vantaEffect.destroy();
+        });
     </script>
 
 
-<script>
-      (function() {
-        const noteArea = document.getElementById('note-area');
-        function createNote() {
-          const note = document.createElement('div');
-          note.className = 'note';
-          note.textContent = Math.random() < 0.5 ? '♪' : '♫';
-          const size = Math.random() * 20 + 16;  
-          note.style.fontSize = size + 'px';
-          note.style.left = (Math.random() * 100) + 'vw';
-          note.style.animationDuration = (Math.random() * 3 + 4) + 's';
-          noteArea.appendChild(note);
-          note.addEventListener('animationend', () => note.remove());
-        }
-        setInterval(createNote, 400);
-      })();
+    <script>
+        (function () {
+            const noteArea = document.getElementById('note-area');
+            function createNote() {
+                const note = document.createElement('div');
+                note.className = 'note';
+                note.textContent = Math.random() < 0.5 ? '♪' : '♫';
+                const size = Math.random() * 20 + 16;
+                note.style.fontSize = size + 'px';
+                note.style.left = (Math.random() * 100) + 'vw';
+                note.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                noteArea.appendChild(note);
+                note.addEventListener('animationend', () => note.remove());
+            }
+            setInterval(createNote, 400);
+        })();
     </script>
 
 </body>
