@@ -324,8 +324,9 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics,
     topic_matches = find_song_matches_with_svd_return_indexes(
         user_description_input, vectorizer, svd, topics_for_songs, score_cutoff=0
     )[:50]
+    # Get top 50 songs that are most similar to the user input in topic space based on cosine similarity score 
     
-    # 4. Filter by age-adjusted sentiment
+    # 4. Filter by age-adjusted sentiment. remove songs that fall outside of ideal sentiment based on age
     ideal_sentiment = 1 - (user_age_input / 50)
     filtered_matches = [
         (idx, score) for idx, score in topic_matches 
@@ -360,6 +361,9 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics,
         word_score = word_match_scores.get(song_idx, 0)
         combined_score = topic_score + word_score * 0.2
         combined_scores.append((song_idx, combined_score))
+    common_word_scores = combined_scores
+    # Add x0.2 of the normalized word score to the overall song score, with word score being the number of 
+    # words the lyrics have in common with the user input
     
     # 8. Handle antonyms
     word_antonyms = {word: get_antonyms(word) for word in user_words}
@@ -376,6 +380,9 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics,
             if song_idx in antonym_counts:
                 penalty = (antonym_counts[song_idx] - min_count) / norm_factor
                 score -= penalty * 0.1
+    antonym_word_scores = combined_scores
+    # Minus x0.1 of the normalized word score to the overall song score, with word score being the number of 
+    # words the lyrics have in common with antonyms to the user input
     
     # 9. Adjust for weather sentiment if provided
     if weather:
@@ -385,10 +392,23 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics,
             song_sentiment = sia.polarity_scores(lyrics)['compound']
             sentiment_diff = abs(weather_sentiment - song_sentiment)
             combined_scores[i] = (song_idx, score + (1 - sentiment_diff) * 0.15)
+    weather_word_scores = combined_scores
+    # Add x0.15 of a bonus sentiment score to the overall song score, with sentiment score 
+    # based on the difference between the ideal sentiment depending on the weather input
+    # And the lyrics
     
     # 10. Sort and get synonyms for unused words
     combined_scores.sort(key=lambda x: -x[1])
     unused_words = [word for word in user_words if word not in clean_song_count]
     synonyms = {word: list(get_synonyms_of_word(word)) for word in unused_words}
     
-    return combined_scores[:10], synonyms
+    return (
+    combined_scores[:10],     # Top 10 final recommended songs after all adjustments
+    synonyms,                 # Dictionary of synonyms for unused input words
+    topic_matches,            # Top 50 songs by SVD topic similarity only: List[Tuple[int, float]]
+    ideal_sentiment,          # Ideal sentiment score based on user age (a float)
+    common_word_scores,       # Scores after word-match bonus applied: List[Tuple[int, float]]
+    antonym_word_scores,      # Scores after antonym penalty applied: List[Tuple[int, float]]
+    weather_word_scores       # Scores after weather sentiment adjustment: List[Tuple[int, float]]
+    # For all the variables structured like List[Tuple[int, float]], the int is the song idnex and the float is the score
+)
