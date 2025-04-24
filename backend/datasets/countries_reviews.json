@@ -24,7 +24,11 @@
     "location_6": "Place du Château",
     "rating_6": "4.6",
     "num_reviews_6": "807",
-    "top_review_6": "Great place. Best to visit during Christmas gets to ya chance to see the Christmas market around it. The church have entry fee. The guides are really helpful with a smile on their face. Normally could spend around one hour it got crowded during night as it was Christmas market time. Most visited place. Also you could see the places around by walk."
+    "top_review_6": "Great place. Best to visit during Christmas gets to ya chance to see the Christmas market around it. The church have entry fee. The guides are really helpful with a smile on their face. Normally could spend around one hour it got crowded during night as it was Christmas market time. Most visited place. Also you could see the places around by walk.",
+    "location_7": "Château de Chambord",
+    "rating_7": "4.6",
+    "num_reviews_7": "56,509",
+    "top_review_7": "Wow, this place is very beautiful. We had a road trip there, few hours driving to each way, but it worth it. The entrance ticket allows you to enter the castle. Without a ticket you still can visit the gardens and to see the building from outside. Inside you have few museums, lot of rooms and balconies access. Rooftop and internal garden is pretty nice. Very picturesque place. If you read the history of the castle and how many times it was abandoned, it makes the visit even more interesting."
   },
   {
     "country": "Spain",
@@ -51,7 +55,11 @@
     "location_6": "Spain Gate",
     "rating_6": "4.7",
     "num_reviews_6": "704",
-    "top_review_6": "Honestly a wonderful vibe in Retiro Park. It’s not a straight shot so you have to walk around the small lake to access it. Once there, there’s a lot of people just gathered around, enjoying themselves. Kids are playing games, there are some picnickers, and even some photo opportunities to have your photo taken as a Bullfighter."
+    "top_review_6": "Honestly a wonderful vibe in Retiro Park. It’s not a straight shot so you have to walk around the small lake to access it. Once there, there’s a lot of people just gathered around, enjoying themselves. Kids are playing games, there are some picnickers, and even some photo opportunities to have your photo taken as a Bullfighter.",
+    "location_7": "Cibeles Fountain",
+    "rating_7": "4.7",
+    "num_reviews_7": "54,422",
+    "top_review_7": "Madrid, Cibelles Fountain, the Plaza de Cibelles is a square with a neo-classical complex of marble sculptures with fountains that has become a symbol for the city of Madrid. The fountain of Cybele is found in the part of Madrid commonly called the Paseo de Recoletos. This fountain is named after Cybele, a Phrygian goddess. The fountain is traditionally the place where: Real Madrid CF celebrate their team victories, with the team captain placing a Real Madrid flag and scarf on the statue."
   },
   {
     "country": "United States",
@@ -78,7 +86,11 @@
     "location_6": "Times Square",
     "rating_6": "4.7",
     "num_reviews_6": "219,631",
-    "top_review_6": "Back in Times Square after two years — still crowded at night, but manageable since it wasn’t the holiday season. You see people from all over the world, smell everything from food to city grit, and hear the soundtrack of New York: sirens, car horns, and the rush of traffic. It’s chaotic, but that’s the NYC vibe — full of life, energy, and dreams. Even as a traveler passing through, surrounded by all those bright LED lights, I felt like I was part of something. Thank you, Manhattan — a city of magic, chaos, and adventure. I’ll always want to come back."
+    "top_review_6": "Back in Times Square after two years — still crowded at night, but manageable since it wasn’t the holiday season. You see people from all over the world, smell everything from food to city grit, and hear the soundtrack of New York: sirens, car horns, and the rush of traffic. It’s chaotic, but that’s the NYC vibe — full of life, energy, and dreams. Even as a traveler passing through, surrounded by all those bright LED lights, I felt like I was part of something. Thank you, Manhattan — a city of magic, chaos, and adventure. I’ll always want to come back.",
+    "location_7": "Statue of Liberty",
+    "rating_7": "4.7",
+    "num_reviews_7": "105,345",
+    "top_review_7": "Beautiful experience of the statue of liberty. Especially fascinating is how the statue was constructed and the different renovations which had been carried out over the years. The museum also provides a wonderful history of how the different aspects of the image and the work carried out on each individual part which makes up the humongous image. Then you also have the opportunity to make a contribution to this rich American history by writing your own name and viewing your contribution on a big screen. Truly a rich culture which represents safety, equality, diversity, family, education and all what it takes to be dignified written in just one image. Worth the visit"
   },
   {
     "country": "China",
@@ -105,7 +117,11 @@
     "location_6": "Potala Palace",
     "rating_6": "4.8",
     "num_reviews_6": "1,631",
-    "top_review_6": "It was such an amazing place to be, especially in the evening. The lights were incredible, and there was music in the air. Visited the Palace in the afternoon as well, and the climb was quite tiring but it was worth it. Beautiful architecture all around."
+    "top_review_6": "It was such an amazing place to be, especially in the evening. The lights were incredible, and there was music in the air. Visited the Palace in the afternoon as well, and the climb was quite tiring but it was worth it. Beautiful architecture all around.",
+    "location_7": "Forbidden City",
+    "rating_7": "4.6",
+    "num_reviews_7": "1,989",
+    "top_review_7": "If you're into history, architecture, or just really big palaces, the Forbidden City is your kind of place. This isn’t just a city — it’s an emperor-sized flex. Over 180 acres, nearly 1,000 buildings, and not a Starbucks in sight. You’ll walk a lot — wear comfy shoes and maybe emotionally prepare yourself for a workout disguised as sightseeing. The whole place is dripping with history. You can practically hear echoes of royal drama, whispered secrets, and ceremonial fanfare. If you’ve seen The Last Emperor, it hits different when you’re actually standing in that courtyard. Spoiler: it’s even more majestic in real life, and slightly less soundtrack-heavy. Pro tip: go early to avoid the crowds and bring a guide (or at least a podcast) to really soak up the stories. Or just wander and pretend you’re an exiled prince — works either way"
   },
   {
     "country": "Italy",
@@ -132,7 +148,11 @@
     "location_6": "Doge's Palace",
     "rating_6": "4.7",
     "num_reviews_6": "33,371",
-    "top_review_6": "Stunning, opulent, and absolutely worth a visit. The artwork and architecture are incredible, with grand halls and beautiful ceilings featuring works by Tintoretto and Veronese. Walking through the Bridge of Sighs was a unique experience, seeing the stark contrast between the palace and the prison. The history is fascinating, as you get to explore the very heart of Venice’s former power. It wasn’t crowded and we spent a good two hours here—definitely bring water. The great ornamental halls stood out the most, making it a breathtaking experience you absolutely must have. I’d recommend buying tickets in advance (we got a combo ticket for the basilica too)."
+    "top_review_6": "Stunning, opulent, and absolutely worth a visit. The artwork and architecture are incredible, with grand halls and beautiful ceilings featuring works by Tintoretto and Veronese. Walking through the Bridge of Sighs was a unique experience, seeing the stark contrast between the palace and the prison. The history is fascinating, as you get to explore the very heart of Venice’s former power. It wasn’t crowded and we spent a good two hours here—definitely bring water. The great ornamental halls stood out the most, making it a breathtaking experience you absolutely must have. I’d recommend buying tickets in advance (we got a combo ticket for the basilica too).",
+    "location_7": "Saint Mark's Basilica",
+    "rating_7": "4.7",
+    "num_reviews_7": "24,167",
+    "top_review_7": "What an amazing place!  We booked tickets in advance which is a good idea, but there weren't any lines today so we could have just walked up.  However, it's early in the season and there are no cruise ships in town.  Don't risk it - book ahead.  My advice is to book the extras (golden altar and museum / rooftop / horses).  Also get the audio guide at the entrance for 7 euros and bring your own headphones to plug into the device."
   },
   {
     "country": "Turkey",
@@ -159,7 +179,11 @@
     "location_6": "Pigeon Valley",
     "rating_6": "4.6",
     "num_reviews_6": "16,433",
-    "top_review_6": "Pigeon Valley in Cappadocia is a must-visit for nature lovers and history enthusiasts alike. The valley is known for its unique rock formations and fairy chimneys, creating a picturesque landscape perfect for hiking and photography. The valley’s name comes from the ancient pigeon houses carved into the cliffs, which were once used by locals to house pigeons. The pigeons' droppings were collected and used as fertilizer for the region’s crops. The breathtaking views and historical significance of the area make it a fascinating place to explore. However, during my visit, I was a bit disappointed not to see many pigeons, as I had expected more of them. Despite this, the natural beauty and rich history of the valley make it a great spot for a peaceful hike. The views and tranquil atmosphere are worth the visit, even if the pigeons were a rare sight."
+    "top_review_6": "Pigeon Valley in Cappadocia is a must-visit for nature lovers and history enthusiasts alike. The valley is known for its unique rock formations and fairy chimneys, creating a picturesque landscape perfect for hiking and photography. The valley’s name comes from the ancient pigeon houses carved into the cliffs, which were once used by locals to house pigeons. The pigeons' droppings were collected and used as fertilizer for the region’s crops. The breathtaking views and historical significance of the area make it a fascinating place to explore. However, during my visit, I was a bit disappointed not to see many pigeons, as I had expected more of them. Despite this, the natural beauty and rich history of the valley make it a great spot for a peaceful hike. The views and tranquil atmosphere are worth the visit, even if the pigeons were a rare sight.",
+    "location_7": "Dolmabahçe Palace",
+    "rating_7": "4.7",
+    "num_reviews_7": "82,821",
+    "top_review_7": "Step into the colourful gardens and dive into the magnificent architecture as well as rich history of this place! Unfortunately you are not allowed to make pictures within closed areas - trust me you will not regret it if you come and see it for yourself! Don’t forget to visit the painting museum - Full with paintings that captured the history of the Ottoman Empire! A nice surprise was the park full with different birds!"
   },
   {
     "country": "Mexico",
@@ -186,7 +210,11 @@
     "location_6": "Zona Arqueológica Palenque",
     "rating_6": "4.8",
     "num_reviews_6": "18,946",
-    "top_review_6": "Very interesting archaeology stories in Palenque about Pacal 'El Astronauts', the Red Queen and women ruler. Love the different architecture from the other sites. Was able to still climb one of the large pyramid behind the royal palace. Unfortunately unable to climb Pacal's temple and see the inside stair cases leading to the 20 ton sarcophagus with the interesting picturesque design of his tomb cover. Visit before it comes overly busy with tourists! Go with a guide, you won't regret hearing the stories. The Jungle path tour is also good, learn about the jungle, wildlife and overgrowth on the temples."
+    "top_review_6": "Very interesting archaeology stories in Palenque about Pacal 'El Astronauts', the Red Queen and women ruler. Love the different architecture from the other sites. Was able to still climb one of the large pyramid behind the royal palace. Unfortunately unable to climb Pacal's temple and see the inside stair cases leading to the 20 ton sarcophagus with the interesting picturesque design of his tomb cover. Visit before it comes overly busy with tourists! Go with a guide, you won't regret hearing the stories. The Jungle path tour is also good, learn about the jungle, wildlife and overgrowth on the temples.",
+    "location_7": "Chichén Itzá",
+    "rating_7": "4.8",
+    "num_reviews_7": "129,169",
+    "top_review_7": "Highly recommend tour, first time visitors should take a tour guide to understand the history, however it is not a must if you just want to take pictures. It's our kids first time and our second time visiting, we went later in the afternoon on this trip and it was less crowded, sun wasn't as hot and pictures came out abit clearer. #7wonders"
   },
   {
     "country": "Thailand",
@@ -213,7 +241,11 @@
     "location_6": "The Temple of the Emerald Buddha",
     "rating_6": "4.7",
     "num_reviews_6": "38,231",
-    "top_review_6": "We visited this incredible temple, and it was truly grand—massive in scale and an absolute must-see. Whether you’re interested in history, culture, or simply appreciating different religious traditions, this place offers a fascinating experience. Even if you don’t practice the religion, you’ll still enjoy exploring the intricate artwork, vibrant colors, and rich symbolism throughout the temple. The sheer size of the main statue is breathtaking, and the entire site is impeccably maintained—clean, well-organized, and a pleasure to walk through. Once you’re done, there are plenty of nearby shops offering affordable souvenirs, making it a great place to pick up a memento. If you appreciate history, art, or cultural experiences, I highly recommend visiting."
+    "top_review_6": "We visited this incredible temple, and it was truly grand—massive in scale and an absolute must-see. Whether you’re interested in history, culture, or simply appreciating different religious traditions, this place offers a fascinating experience. Even if you don’t practice the religion, you’ll still enjoy exploring the intricate artwork, vibrant colors, and rich symbolism throughout the temple. The sheer size of the main statue is breathtaking, and the entire site is impeccably maintained—clean, well-organized, and a pleasure to walk through. Once you’re done, there are plenty of nearby shops offering affordable souvenirs, making it a great place to pick up a memento. If you appreciate history, art, or cultural experiences, I highly recommend visiting.",
+    "location_7": "Khao Yai National Park",
+    "rating_7": "4.5",
+    "num_reviews_7": "15,567",
+    "top_review_7": "Second time riding through was absolutely excellent a deer standing at edge of trees just happy eating further along road 2 elephants are walking in to trees stopped took some photos just then 3 more came from other side of road to see them was a remarkable experience I only wish I could have caught it all on video I just stayed perfectly still let them walk past when they were ready to go they all disappear off in to trees happy on their way so many birds waterfalls lovely place to visit will return again definitely"
   },
   {
     "country": "Japan",
@@ -240,7 +272,11 @@
     "location_6": "Osaka Castle",
     "rating_6": "4.4",
     "num_reviews_6": "80,188",
-    "top_review_6": "Osaka Castle and its surrounding park are absolutely stunning, especially in spring when the plum and cherry blossoms are in full bloom. It’s a peaceful spot to walk, take photos, or just enjoy nature. You’ll also find snack stands around for a quick bite. If you’re interested in the history or want panoramic views, it’s worth going inside—just be sure to buy your tickets online to skip the long lines. That said, going inside isn’t essential to enjoy the experience. I recommend visiting later in the day to catch golden hour and sunset—the views of the city from the park are beautiful at that time. Definitely worth a visit when in Osaka!"
+    "top_review_6": "Osaka Castle and its surrounding park are absolutely stunning, especially in spring when the plum and cherry blossoms are in full bloom. It’s a peaceful spot to walk, take photos, or just enjoy nature. You’ll also find snack stands around for a quick bite. If you’re interested in the history or want panoramic views, it’s worth going inside—just be sure to buy your tickets online to skip the long lines. That said, going inside isn’t essential to enjoy the experience. I recommend visiting later in the day to catch golden hour and sunset—the views of the city from the park are beautiful at that time. Definitely worth a visit when in Osaka!",
+    "location_7": "Shinjuku Gyoen National Garden",
+    "rating_7": "4.6",
+    "num_reviews_7": "40,607",
+    "top_review_7": "We had a great time visiting this beautiful park! Even though it was quite crowded (we went on a Friday), the park is so spacious that it was still easy to walk around and enjoy the scenery. The cherry blossoms were in full bloom and absolutely stunning. We especially loved the small pond—it was peaceful and picturesque. While we wished it had been a bit calmer and quieter, the overall experience was still very enjoyable. The entrance fee is 500 yen per adult and can be paid by cash or card. The ticket line moved really quickly, which was a nice bonus. There are also lockers available, but make sure to have some cash on hand as they don’t accept cards."
   },
   {
     "country": "United Kingdom",
@@ -267,7 +303,11 @@
     "location_6": "The Roman Baths",
     "rating_6": "4.6",
     "num_reviews_6": "35,525",
-    "top_review_6": "Highly recommended and NOT what you expect. Buy tickets in ADVANCE!!! I would buy them at least two days in advance and longer advance planning if possible. Plan on spending 3 - 4 hours in the Roman Bath. It is so full of history and life from a different time. Don’t rush through it because you will miss it. Note: You can taste / drink the water! Amazing memory and definitely buy the cup from Bath. The gift shop also has some unique items and is worth the visit. The individual stories of people who visited the baths and to see the process of using the bath is also interesting. Live history here. Spend the money on the virtual tour. You understand so much more."
+    "top_review_6": "Highly recommended and NOT what you expect. Buy tickets in ADVANCE!!! I would buy them at least two days in advance and longer advance planning if possible. Plan on spending 3 - 4 hours in the Roman Bath. It is so full of history and life from a different time. Don’t rush through it because you will miss it. Note: You can taste / drink the water! Amazing memory and definitely buy the cup from Bath. The gift shop also has some unique items and is worth the visit. The individual stories of people who visited the baths and to see the process of using the bath is also interesting. Live history here. Spend the money on the virtual tour. You understand so much more.",
+    "location_7": "Hyde Park",
+    "rating_7": "4.7",
+    "num_reviews_7": "133,747",
+    "top_review_7": "I enjoyed my visit in London as a whole but the park visit is my most relaxing. It is the best park I’ve visited so far together with the Kensington Park. The massiveness and serenity of the place is wonderful. You can find your own nook to have your picnic or just read a book and snooze a bit. The best part is you will relax seeing the swans, ducks and other birds freely doing their own things. There are nice restaurants and public restrooms that you can easily access."
   },
   {
     "country": "Austria",
@@ -294,7 +334,11 @@
     "location_6": "Fortress Hohensalzburg",
     "rating_6": "4.6",
     "num_reviews_6": "47,797",
-    "top_review_6": "What a wonderful experience! The excursion was easy and delightful because we rode the funicular up to Fortress Hohensalzburg. We toured the fortress's fascinating history and breathtaking exhibitions, which were included in the ticket. With an ideal overview of Salzburg and the surroundings, the views from the summit are stunning.  It's a fantastic way to take in the city's beauty and history! A wonderful old castle to explore for a few hours. A stunning view of Salzburg can be seen from the cafe. Everyone on your list can find something they like in the gift shop. There is a good display inside that depicts the different stages of building over the years. Strongly advised!"
+    "top_review_6": "What a wonderful experience! The excursion was easy and delightful because we rode the funicular up to Fortress Hohensalzburg. We toured the fortress's fascinating history and breathtaking exhibitions, which were included in the ticket. With an ideal overview of Salzburg and the surroundings, the views from the summit are stunning.  It's a fantastic way to take in the city's beauty and history! A wonderful old castle to explore for a few hours. A stunning view of Salzburg can be seen from the cafe. Everyone on your list can find something they like in the gift shop. There is a good display inside that depicts the different stages of building over the years. Strongly advised!",
+    "location_7": "Belvedere Palace",
+    "rating_7": "4.7",
+    "num_reviews_7": "76,156",
+    "top_review_7": "What an amazing day! We bought student tickets online which made it a lot cheaper than on the door! Where to start. The gardens, the art, the statues, the architecture ….. everything was breathtaking. Spent an amazing two hours here walking around the palace and the gardens and could’ve spent longer! The art inside the palace was beautiful curated and presented and everything was well described. It was great to see such famous paintings in person! It was such a peaceful sunny day, will be definetely be coming again!"
   },
   {
     "country": "Greece",
@@ -321,7 +365,11 @@
     "location_6": "Acropolis Museum",
     "rating_6": "4.7",
     "num_reviews_6": "72,503",
-    "top_review_6": "The Acropolis Museum in Athens is a great place. The modern design of the museum provides a fitting backdrop for the extensive collection of artifacts from the Acropolis. The exhibits are thoughtfully arranged, offering a comprehensive look into ancient Greek history and culture. The glass floors, which reveal the archaeological excavations below, add an interesting dimension to the visit. The collection includes significant pieces such as the Caryatids and Parthenon sculptures. The museum's layout is easy to navigate, making it a pleasant experience to explore each exhibit. The museum also features a café with views of the Acropolis, adding to the overall experience. Overall, the Acropolis Museum is a must-see for anyone visiting Athens. It offers a well-rounded and informative journey through history in a well-designed setting. Highly recommended for history enthusiasts and casual visitors alike. 🏛️✨"
+    "top_review_6": "The Acropolis Museum in Athens is a great place. The modern design of the museum provides a fitting backdrop for the extensive collection of artifacts from the Acropolis. The exhibits are thoughtfully arranged, offering a comprehensive look into ancient Greek history and culture. The glass floors, which reveal the archaeological excavations below, add an interesting dimension to the visit. The collection includes significant pieces such as the Caryatids and Parthenon sculptures. The museum's layout is easy to navigate, making it a pleasant experience to explore each exhibit. The museum also features a café with views of the Acropolis, adding to the overall experience. Overall, the Acropolis Museum is a must-see for anyone visiting Athens. It offers a well-rounded and informative journey through history in a well-designed setting. Highly recommended for history enthusiasts and casual visitors alike. 🏛️✨",
+    "location_7": "Temple of Olympian Zeus",
+    "rating_7": "4.5",
+    "num_reviews_7": "28,555",
+    "top_review_7": "The architectural design of Olympion is absolutely stunning! 🏛️ The building blends modern elegance with timeless style, creating a perfect space for both functionality and beauty. ✨ The attention to detail is evident in every corner, from the sleek lines to the carefully chosen materials. 🏗️ The layout maximizes space and natural light, making the entire experience feel open and inviting. 🌿 It’s truly a masterpiece of design – a place that is as visually captivating as it is practical. Highly impressed! 👏"
   },
   {
     "country": "Malaysia",
@@ -348,7 +396,11 @@
     "location_6": "Aquaria KLCC",
     "rating_6": "4.3",
     "num_reviews_6": "36,364",
-    "top_review_6": "Wonderful experience at aquaria which boasts of over 250 different species and over 5000 land and aquatic animals from around the world. One of the biggest species of stingray , piranhas, Arapaimas i have seen ever. It takes around 2-3 hours if you want to fully enjoy the aquarium. Located beneath the KLCC convention centre this is one of the top 5 aquariums around the world"
+    "top_review_6": "Wonderful experience at aquaria which boasts of over 250 different species and over 5000 land and aquatic animals from around the world. One of the biggest species of stingray , piranhas, Arapaimas i have seen ever. It takes around 2-3 hours if you want to fully enjoy the aquarium. Located beneath the KLCC convention centre this is one of the top 5 aquariums around the world",
+    "location_7": "Istana Negara",
+    "rating_7": "4.3",
+    "num_reviews_7": "7,418",
+    "top_review_7": "This is the most important and historical place in Malaysia🇲🇾. This place is the official palace of the King 🤴🏻 of Malaysia. Thousands of foreign tourists visit this palace every day. It is possible to observe. We went to visit this palace in the morning.It was located in a very beautiful environment.😍🍃✌🏻"
   },
   {
     "country": "Portugal",
@@ -375,7 +427,11 @@
     "location_6": "Jerónimos Monastery",
     "rating_6": "4.5",
     "num_reviews_6": "54,111",
-    "top_review_6": "This monastery houses the most magnificent cloister I’ve ever seen during my tours of cathedrals and monasteries. It’s indeed designated as a UNESCO World Heritage Site, so it’s worth taking the time to visit and immerse yourself in its intricate details and breathtaking beauty. If you’re short on time, I suggest skipping the cathedral (which is free next door) and focusing solely on the cloister. While the cathedral is impressive, it falls short in comparison. To avoid long lines, it’s advisable to purchase tickets in advance and plan your visit accordingly."
+    "top_review_6": "This monastery houses the most magnificent cloister I’ve ever seen during my tours of cathedrals and monasteries. It’s indeed designated as a UNESCO World Heritage Site, so it’s worth taking the time to visit and immerse yourself in its intricate details and breathtaking beauty. If you’re short on time, I suggest skipping the cathedral (which is free next door) and focusing solely on the cloister. While the cathedral is impressive, it falls short in comparison. To avoid long lines, it’s advisable to purchase tickets in advance and plan your visit accordingly.",
+    "location_7": "Oceanário de Lisboa",
+    "rating_7": "4.7",
+    "num_reviews_7": "93,423",
+    "top_review_7": "This is one of the best aquariums I’ve visited. They placed a large tank in the middle of 2 floors and smaller tanks of different aquatic animals around it. One would walk in and out of the main tank looking at the different spices and going back to look at the larger tank at different views. This really enhanced the experience. I really like that they have a sunfish in the big tank. I was observing it basking under the sun light and it seem to be enjoying it by tilting at different angles. The sunfish is really cute! I came here in April so there wasn’t a queue to get in."
   },
   {
     "country": "Russia",
@@ -402,7 +458,11 @@
     "location_6": "Peter and Paul Fortress",
     "rating_6": "4.8",
     "num_reviews_6": "45,061",
-    "top_review_6": "Beautiful place , must to visit. you can see king & queen’s coffins inside. beautiful golden sculptures & great decoration on everywhere. may need local guide to inform a history & which coffin is? should be quiet & don’t use flash when uou take a photos."
+    "top_review_6": "Beautiful place , must to visit. you can see king & queen’s coffins inside. beautiful golden sculptures & great decoration on everywhere. may need local guide to inform a history & which coffin is? should be quiet & don’t use flash when uou take a photos.",
+    "location_7": "Yusupov Palace",
+    "rating_7": "4.8",
+    "num_reviews_7": "11,502",
+    "top_review_7": "Yusupov Palace welcomes you to Tsarist Russia with its magnificent architecture, elegant and sumptuous interior decoration. I was very impressed while visiting this palace, where the events I learned from history books and documentaries took place. A must visit place in St Petersburg🫶✨"
   },
   {
     "country": "Canada",
@@ -429,7 +489,11 @@
     "location_6": "White Water Walk",
     "rating_6": "4.6",
     "num_reviews_6": "6,504",
-    "top_review_6": "I recently visited the White Water Walk, and it was a truly refreshing experience. The pathway along the Niagara River offers breathtaking views of the rapids, and the sound of the rushing water creates a peaceful atmosphere. The well-maintained walk is perfect for a leisurely stroll, allowing you to connect with nature while enjoying the beautiful surroundings. I especially loved the viewpoints that showcase the river's power and beauty. Whether you’re a nature lover or just looking for a serene escape, the White Water Walk is a must-visit. Highly recommend!"
+    "top_review_6": "I recently visited the White Water Walk, and it was a truly refreshing experience. The pathway along the Niagara River offers breathtaking views of the rapids, and the sound of the rushing water creates a peaceful atmosphere. The well-maintained walk is perfect for a leisurely stroll, allowing you to connect with nature while enjoying the beautiful surroundings. I especially loved the viewpoints that showcase the river's power and beauty. Whether you’re a nature lover or just looking for a serene escape, the White Water Walk is a must-visit. Highly recommend!",
+    "location_7": "Table Rock Welcome Centre",
+    "rating_7": "4.5",
+    "num_reviews_7": "1,664",
+    "top_review_7": "This place is great. It's where you go to get your wego pass for the busses. There's kind of a main bus station here that a couple of the bus routes come to and it's right in front of the incline railway. I'd definitely recommend getting one of the Niagara parks passes that includes the wego bus and incline railway as well as the journey behind the falls, that is in this building and the waterpower station that is a couple of minutes walk from here. This building sits right on top of the falls, has a couple of places to eat and a great gift shop. All of the staff here are super helpful. I would start my trip here, we did not know that when we got here and spent quite a bit of time waiting at bus stops trying to figure things out. It's a good 'base' to get you all around town. We stayed at the embassy suites which is right up the incline railway, while we didn't love the hotel, it was a convenient location. The falls view casino resort is right there also, maybe a better choice."
   },
   {
     "country": "Netherlands",
@@ -456,7 +520,11 @@
     "location_6": "Rijksmuseum",
     "rating_6": "4.7",
     "num_reviews_6": "101,471",
-    "top_review_6": "This is a fantastic museum to visit, whether you’re a tourist or a local. It’s a great way to deepen your understanding of Dutch history. You’ll find not only masterpieces by legendary artists—like the famous Rembrandt portrait—but also a wide range of historical artifacts, including armor, weapons, and period clothing. The free app offers guided explanations throughout the museum, so be sure to download it before your visit and plan ahead—there’s a lot to take in."
+    "top_review_6": "This is a fantastic museum to visit, whether you’re a tourist or a local. It’s a great way to deepen your understanding of Dutch history. You’ll find not only masterpieces by legendary artists—like the famous Rembrandt portrait—but also a wide range of historical artifacts, including armor, weapons, and period clothing. The free app offers guided explanations throughout the museum, so be sure to download it before your visit and plan ahead—there’s a lot to take in.",
+    "location_7": "Castle De Haar",
+    "rating_7": "4.6",
+    "num_reviews_7": "20,067",
+    "top_review_7": "Castle de Haar is a breathtaking destination that seamlessly blends modern restoration with historical grandeur. The architecture is stunning, with intricate details that transport you to another era. While getting here may take some effort, it’s absolutely worth it. The gardens are beautifully maintained, offering a peaceful and picturesque setting. Inside, the castle is filled with antiques from different periods and remarkable artworks that add to its charm. One of the highlights of the visit is the knowledgeable and friendly guides. They are incredibly patient and eager to answer any questions, making the experience even more enjoyable. Highly recommended for history lovers, architecture enthusiasts, and anyone looking for a magical experience in the Netherlands!"
   },
   {
     "country": "Vietnam",
@@ -483,7 +551,11 @@
     "location_6": "Cu Chi Tunnel",
     "rating_6": "4.5",
     "num_reviews_6": "14,703",
-    "top_review_6": "We went there twice: once with an organized tour incl. english speaking guide and once on our own. Getting there by rented car on a Tuesday afternoon turned out to be a good decision because there were hardly any other tourists. The entry fee was very cheap and the English speaking guide was very fluent. It's like an interactive museum and quite impressive at that. However a minimum level of fitness is required to explore the small tunnels. Not recommended for people with claustrophobia. But even if you don't go into the tunnels, the walk through the jungle and learning about the war is already worth the visit."
+    "top_review_6": "We went there twice: once with an organized tour incl. english speaking guide and once on our own. Getting there by rented car on a Tuesday afternoon turned out to be a good decision because there were hardly any other tourists. The entry fee was very cheap and the English speaking guide was very fluent. It's like an interactive museum and quite impressive at that. However a minimum level of fitness is required to explore the small tunnels. Not recommended for people with claustrophobia. But even if you don't go into the tunnels, the walk through the jungle and learning about the war is already worth the visit.",
+    "location_7": "Vung Chua Mountain",
+    "rating_7": "4.9",
+    "num_reviews_7": "1,386",
+    "top_review_7": "A nice place to go walking. The path is basically an old road where automatic motorbikes are forbidden. You might encounter a few manual motorbikes, but very few. Many people come here in the early morning and late afternoon for hiking. On the downsides I would say that there is almost no view from the top of the mountain, because the access to the summit is forbidden (public facility there)."
   },
   {
     "country": "India",
@@ -510,7 +582,11 @@
     "location_6": "Agra Fort",
     "rating_6": "4.5",
     "num_reviews_6": "142,604",
-    "top_review_6": "Visiting Agra Fort was an unforgettable experience. The beauty and grandeur of the fort are truly breathtaking, reflecting the rich history and architectural brilliance of the Mughal era. What made the visit even more special was our tour guide who was incredibly knowledgeable and passionate. He shared fascinating details and stories that brought the place to life. Everything was well-organized, and the guide made our experience smooth and enjoyable. I highly recommend this tour to anyone visiting Agra!"
+    "top_review_6": "Visiting Agra Fort was an unforgettable experience. The beauty and grandeur of the fort are truly breathtaking, reflecting the rich history and architectural brilliance of the Mughal era. What made the visit even more special was our tour guide who was incredibly knowledgeable and passionate. He shared fascinating details and stories that brought the place to life. Everything was well-organized, and the guide made our experience smooth and enjoyable. I highly recommend this tour to anyone visiting Agra!",
+    "location_7": "Mysore Palace",
+    "rating_7": "4.6",
+    "num_reviews_7": "282,072",
+    "top_review_7": "The palace is beautifully maintained and the staff is really helpful. There is ample parking space and the administration and crowd management is pretty good. The central area has some beautiful artwork with exquisite glasswork specially on the roof. This is a must visit place if you are in Mysore."
   },
   {
     "country": "South Korea",
@@ -537,6 +613,10 @@
     "location_6": "Bukchon Hanok Village",
     "rating_6": "4.4",
     "num_reviews_6": "20,046",
-    "top_review_6": "It has a great scenery at the top of the small hill. The hill ain't steep so don't worry about your energy. You will pass traditional Korean houses, some of them even have people living in it. Sure good place for photo taking. I very recommended going there."
+    "top_review_6": "It has a great scenery at the top of the small hill. The hill ain't steep so don't worry about your energy. You will pass traditional Korean houses, some of them even have people living in it. Sure good place for photo taking. I very recommended going there.",
+    "location_7": "National Museum of Korea",
+    "rating_7": "4.7",
+    "num_reviews_7": "25,893",
+    "top_review_7": "Fabulous museum, don’t miss it!  Allow 1 to 5 hours for your visit.  Whether you love art or history, you will enjoy this museum.  The displays are thoughtfully arranged and include thorough explanations.  I even used a robot to guide me to some exhibits of interest, try it, it’s fun, especially recommended for children.  There is a lot of walking both inside and outside (free admission outside) the museum.  A subway station is nearby and easy to use."
   }
 ]
