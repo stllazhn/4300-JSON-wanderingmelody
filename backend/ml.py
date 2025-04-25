@@ -246,7 +246,24 @@ def other_recommend_songs(user_genre_input, cleaned_tokenized_lyrics, clean_song
 
     filtered_songs = filtered_songs[:10]
     
-    result = sort_polarity_scores(filtered_songs, cleaned_tokenized_lyrics, "pos")
+    # Get sentiment-based ranking
+    sentiment_sorted = sort_polarity_scores(filtered_songs, cleaned_tokenized_lyrics, "pos")
+
+    # Add popularity boosting
+    song_popularity = {i: lyric_df.loc[i, "popularity"] if not pd.isna(lyric_df.loc[i, "popularity"]) else 0 for i in sentiment_sorted}
+
+    # Combine polarity and popularity: score = 0.7 * sentiment_rank + 0.3 * popularity_rank (you can tune weights)
+    combined_scores = {}
+    max_sentiment = len(sentiment_sorted)
+    for rank, song_id in enumerate(sentiment_sorted):
+        sentiment_score = max_sentiment - rank  # Higher rank → higher score
+        popularity_score = song_popularity[song_id]
+        combined_score = 0.7 * sentiment_score + 0.3 * popularity_score
+        combined_scores[song_id] = combined_score
+
+    # Final sort
+    result = sorted(combined_scores, key=combined_scores.get, reverse=True)
+
     
     word_synonym_dict = {word: list(get_synonyms_of_word(word)) for word in stemmed_user_input_preserve_original if possible_songs_dict.get(word) is None}
     
@@ -260,9 +277,9 @@ def get_song_details(song_ids):
         if not song_row.empty:
             details = {
                 "title": song_row["song"].values[0],
-                "artist": song_row["artist"].values[0]
+                "artist": song_row["artist"].values[0],
                 # "image_url": song_row["image_url"].values[0],
-                # "popularity": song_row["popularity"].values[0],
+                "popularity": song_row["popularity"].values[0],
                 # "song_url": song_row["song_url"].values[0]
             }
             song_details.append(details)
@@ -406,8 +423,22 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics,
     # Add x0.15 of a bonus sentiment score to the overall song score, with sentiment score 
     # based on the difference between the ideal sentiment depending on the weather input
     # And the lyrics
+
+    # 10. Add Spotify popularity score (scaled between 0 and 1, weighted by 0.3)
+    min_pop, max_pop = lyric_df['popularity'].min(), lyric_df['popularity'].max()
+    pop_norm = lambda p: (p - min_pop) / (max_pop - min_pop) if max_pop > min_pop else 0
+
+    # Store popularity_bonus separately
+    popularity_word_scores = []
+
+    for song_idx, score in combined_scores:
+        popularity = lyric_df['popularity'][song_idx]
+        popularity_bonus = pop_norm(popularity) * 0.3
+        updated_score = score + popularity_bonus
+        popularity_word_scores.append((song_idx, updated_score, popularity_bonus))  # add bonus as third value
+
     
-    # 10. Sort and get synonyms for unused words
+    # 11. Sort and get synonyms for unused words
     combined_scores.sort(key=lambda x: -x[1])
     unused_words = [word for word in user_words if word not in clean_song_count]
     synonyms = {word: list(get_synonyms_of_word(word)) for word in unused_words}
@@ -419,6 +450,7 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics,
     ideal_sentiment,          # Ideal sentiment score based on user age (a float)
     common_word_scores,       # Scores after word-match bonus applied: List[Tuple[int, float]]
     antonym_word_scores,      # Scores after antonym penalty applied: List[Tuple[int, float]]
-    weather_word_scores       # Scores after weather sentiment adjustment: List[Tuple[int, float]]
+    weather_word_scores,       # Scores after weather sentiment adjustment: List[Tuple[int, float]]
+    popularity_word_scores
     # For all the variables structured like List[Tuple[int, float]], the int is the song idnex and the float is the score
-)
+    )

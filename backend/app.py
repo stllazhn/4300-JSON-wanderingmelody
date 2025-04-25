@@ -57,7 +57,7 @@ def recommendations():
     print("calling svd rec songs function")
     # Call the recommendation function
 
-    recommended_songs_with_scores, synonyms, topic_matches, ideal_sentiment, common_word_scores, antonym_word_scores, weather_word_scores = ml.svd_recommend_songs(mood, cleaned_tokenized_lyrics, clean_song_count, age, inferred_weather_mood)
+    recommended_songs_with_scores, synonyms, topic_matches, ideal_sentiment, common_word_scores, antonym_word_scores, weather_word_scores, popularity_word_scores = ml.svd_recommend_songs(mood, cleaned_tokenized_lyrics, clean_song_count, age, inferred_weather_mood)
 
     print("finished svd rec songs function")
     if not recommended_songs_with_scores:

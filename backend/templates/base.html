@@ -305,6 +305,7 @@
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
+                    return "";
                     return response.json();
                 })
                 .then(data => {
@@ -332,11 +333,12 @@
                                     <div class="tooltip">
                                         <h4>Why this song?</h4>
                                         <div class="tooltip-content">
-                                        <p><strong>Topic similarity:</strong> ${song.topic_score} — Cosine Similarity Score matching the input words.</p>
-                                        <p>Irrelevant songs are filtered out based on age input.</p>
-                                        <p><strong>Word match bonus:</strong> ${song.common_word_score} — x0.2 of the normalized common word score added to the overall song score, with common word score being the number of words the lyrics have in common with the user input.</p>
-                                        <p><strong>Antonym penalty:</strong> ${song.antonym_penalty} — x0.1 of the normalized antonym word score deducted to the overall song score, with antonym word score being the number of words the lyrics have in common with the user input.</p>
-                                        <p><strong>Weather fit:</strong> ${song.weather_boost} — x0.15 of a bonus sentiment score added to the overall song score, with sentiment score based on the difference between the ideal sentiment depending on the weather input and the lyrics.</p>
+                                            <p><strong>Topic similarity:</strong> ${song.topic_score} — Base score from cosine similarity between your description and the song's themes.</p>
+                                            <p>Songs with sentiment far from your age-based ideal are filtered out.</p>
+                                            <p><strong>Word match bonus:</strong> ${song.common_word_score} — +0.2 × normalized count of overlapping words between your input and the song's lyrics.</p>
+                                            <p><strong>Antonym penalty:</strong> ${song.antonym_penalty} — −0.1 × normalized count of antonyms that appear in the lyrics.</p>
+                                            <p><strong>Weather fit:</strong> ${song.weather_boost} — +0.15 × alignment between the song's sentiment and your current weather mood.</p>
+                                            <p><strong>Popularity boost:</strong> ${song.popularity} — +0.3 × Spotify popularity score (scaled 0–1).</p>
                                         </div>
                                     </div>
                                 `;
@@ -344,7 +346,10 @@
                         });
                     } else {
                         console.log("No songs found.");
-                        answerBox.innerHTML = "<p>No songs found matching your mood.</p>";
+                        answerBox.innerHTML = `
+                            <p>No songs found matching your mood.</p>
+                            <img src="/static/bad.gif" alt="No songs gif" style="width: 100%; margin-top: 10px;" />
+                        `;
                     }
                 })
                 .catch(error => {
