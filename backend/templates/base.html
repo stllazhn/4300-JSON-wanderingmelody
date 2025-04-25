@@ -328,6 +328,17 @@
                                             <a href="${song.song_url}" target="_blank" class="play-button">Play on Spotify</a>
                                         </div>
                                     </div>
+
+                                    <div class="tooltip">
+                                        <button>Why this song?</button>
+                                        <div class="tooltip-content">
+                                        <p><strong>Topic similarity:</strong> ${song.topic_score} — Cosine Similarity Score matching the input words.</p>
+                                        <p>Irrelevant songs are filtered out based on age input.</p>
+                                        <p><strong>Word match bonus:</strong> ${song.common_word_score} — x0.2 of the normalized common word score added to the overall song score, with common word score being the number of words the lyrics have in common with the user input.</p>
+                                        <p><strong>Antonym penalty:</strong> ${song.antonym_penalty} — x0.1 of the normalized antonym word score deducted to the overall song score, with antonym word score being the number of words the lyrics have in common with the user input.</p>
+                                        <p><strong>Weather fit:</strong> ${song.weather_boost} — x0.15 of a bonus sentiment score added to the overall song score, with sentiment score based on the difference between the ideal sentiment depending on the weather input and the lyrics.</p>
+                                        </div>
+                                    </div>
                                 `;
                             answerBox.appendChild(songDiv);
                         });
