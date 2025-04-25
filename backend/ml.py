@@ -268,19 +268,29 @@ def get_song_details(song_ids):
             song_details.append(details)
     return song_details
 
-def get_song_details_with_ratings(song_tuple_list):
+def get_song_details_with_ratings(song_tuple_list, topic_matches, common_word_scores, antonym_word_scores, weather_word_scores):
     """Return song details (title, artist, album) from the Spotify dataset given a list of song IDs."""
+    topic_dict = dict(topic_matches)
+    common_word_dict = dict(common_word_scores)
+    antonym_dict = dict(antonym_word_scores)
+    weather_dict = dict(weather_word_scores)
+    
     song_details = []
     for song_id,song_rating in song_tuple_list:
         song_row = lyric_df.loc[lyric_df.index == song_id]  # Find the row with the given song_id
         if not song_row.empty:
             details = {
+                "song_id": song_id,
                 "title": song_row["song"].values[0],
                 "artist": song_row["artist"].values[0],
                 "rating": song_rating,
                 "image_url": song_row["image_url"].values[0],
                 "popularity": song_row["popularity"].values[0],
-                "song_url": song_row["song_url"].values[0]
+                "song_url": song_row["song_url"].values[0],
+                "topic_score": topic_dict.get(song_id, 0),
+                "common_word_score": common_word_dict.get(song_id, 0),
+                "antonym_penalty": antonym_dict.get(song_id, 0),
+                "weather_boost": weather_dict.get(song_id, 0)
             }
             song_details.append(details)
     return song_details

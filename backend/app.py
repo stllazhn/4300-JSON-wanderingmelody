@@ -63,29 +63,12 @@ def recommendations():
     if not recommended_songs_with_scores:
         return jsonify([])  
     
-    topic_dict = dict(topic_matches)
-    common_word_dict = dict(common_word_scores)
-    antonym_dict = dict(antonym_word_scores)
-    weather_dict = dict(weather_word_scores)
-    
-    for (song_id,_) in recommended_songs_with_scores:
-        topic_score = topic_dict.get(song_id, 0)
-        common_word_score = common_word_dict.get(song_id, 0)
-        antonym_penalty = antonym_dict.get(song_id, 0)
-        weather_boost = weather_dict.get(song_id, 0)
-
-        song["topic_score"] = topic_score
-        song["sentiment_score"] = ideal_sentiment
-        song["common_word_score"] = common_word_score
-        song["antonym_penalty"] = antonym_penalty
-        song["weather_boost"] = weather_boost
-    
-    song_details = ml.get_song_details_with_ratings(recommended_songs_with_scores)
+    song_details = ml.get_song_details_with_ratings(recommended_songs_with_scores,topic_matches, common_word_scores, antonym_word_scores, weather_word_scores)
     for song in song_details:
         for key, value in song.items():
             if isinstance(value, (np.integer, np.floating)):
                 song[key] = value.item()  # Convert numpy type to native Python type
-
+                
     return jsonify(song_details)
 
 @app.route("/similar_locations")
