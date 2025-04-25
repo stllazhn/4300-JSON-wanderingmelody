@@ -386,10 +386,10 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics,
     if antonym_counts:
         min_count, max_count = min(antonym_counts.values()), max(antonym_counts.values())
         norm_factor = max_count - min_count if max_count > min_count else 1
-        for song_idx, score in combined_scores:
+        for i, (song_idx, score) in enumerate(combined_scores):
             if song_idx in antonym_counts:
                 penalty = (antonym_counts[song_idx] - min_count) / norm_factor
-                score -= penalty * 0.1
+                combined_scores[i] = (song_idx, score - penalty * 0.1)
     antonym_word_scores = combined_scores.copy()
     # Minus x0.1 of the normalized word score to the overall song score, with word score being the number of 
     # words the lyrics have in common with antonyms to the user input
