@@ -371,7 +371,7 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics,
         word_score = word_match_scores.get(song_idx, 0)
         combined_score = topic_score + word_score * 0.2
         combined_scores.append((song_idx, combined_score))
-    common_word_scores = combined_scores
+    common_word_scores = combined_scores.copy()
     # Add x0.2 of the normalized word score to the overall song score, with word score being the number of 
     # words the lyrics have in common with the user input
     
@@ -390,7 +390,7 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics,
             if song_idx in antonym_counts:
                 penalty = (antonym_counts[song_idx] - min_count) / norm_factor
                 score -= penalty * 0.1
-    antonym_word_scores = combined_scores
+    antonym_word_scores = combined_scores.copy()
     # Minus x0.1 of the normalized word score to the overall song score, with word score being the number of 
     # words the lyrics have in common with antonyms to the user input
     
@@ -402,7 +402,7 @@ def svd_recommend_songs(user_description_input, cleaned_tokenized_lyrics,
             song_sentiment = sia.polarity_scores(lyrics)['compound']
             sentiment_diff = abs(weather_sentiment - song_sentiment)
             combined_scores[i] = (song_idx, score + (1 - sentiment_diff) * 0.15)
-    weather_word_scores = combined_scores
+    weather_word_scores = combined_scores.copy()
     # Add x0.15 of a bonus sentiment score to the overall song score, with sentiment score 
     # based on the difference between the ideal sentiment depending on the weather input
     # And the lyrics
