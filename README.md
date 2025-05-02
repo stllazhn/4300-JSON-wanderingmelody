@@ -23,7 +23,7 @@ A music recommendation engine that helps you explore the world through sound. Si
 
 **WanderingMelody** was designed to simulate a musical journey around the world. You tell us how you feel, and we recommend music that matches that vibe—factoring in your age, genre preference, country, and weather.
 
-> ❌ **NOTE:** Originally, this app planned to fetch real-time weather data via APIs. However, due to server restrictions, this feature was removed. Instead, users select their current weather condition from a dropdown, which the system then maps to a corresponding emotional tone. This still preserves the mood-based filtering while maintaining compatibility with hosting limitations:contentReference[oaicite:0]{index=0}.
+> ❌ **NOTE:** Originally, this app planned to fetch real-time weather data via APIs. However, due to server restrictions, this feature was removed. Instead, users select their current weather condition from a dropdown, which the system then maps to a corresponding emotional tone. This still preserves the mood-based filtering while maintaining compatibility with hosting limitations.
 
 ---
 
