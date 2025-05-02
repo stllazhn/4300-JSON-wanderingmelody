@@ -70,8 +70,20 @@ A music recommendation engine that helps you explore the world through sound. Si
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/WanderingMelody.git
-   cd WanderingMelody
+   git clone https://github.com/YOUR_USERNAME/4300-JSON-wanderingmelody.git
+2. **Create a Virtual Environment:**
+   ```bash
+   python -m venv env
+   source env/bin/activate      # macOS/Linux
+   env\Scripts\activate         # Windows
+4. **Install Dependencies:**
+   ```bash
+   pip install -r requirements.txt
+5. **Run the Application Locally**
+   ```bash
+   cd backend
+   flask run --host=0.0.0.0 --port=5000
+   
 
 ---
 
@@ -81,5 +93,4 @@ A music recommendation engine that helps you explore the world through sound. Si
 - **NLTK** – For natural language processing tools (tokenization, sentiment analysis, WordNet)
 - **Spotify** – For song lyrics, popularity scores, and metadata
 - **VANTA.js** – For animated background effects
-- **OpenWeather** – (initially considered but ultimately not used due to deployment constraints)
 
